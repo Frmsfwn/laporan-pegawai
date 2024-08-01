@@ -13,9 +13,9 @@ class UserAccess
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $kelompok): Response
+    public function handle(Request $request, Closure $next, $role): Response
     {
-        if(auth()->user()->kelompok == $kelompok){
+        if(auth()->user()->role === $role){
             return $next($request);
         }
         return redirect('home');
