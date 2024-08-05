@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
-    function login()
+    function show()
     {
         return view('login.login');
     }
 
-    function storelogin(Request $request)
+    function login(Request $request)
     {
         $messages = [
             'username.required' => 'Username tidak dapat kosong.',
@@ -24,7 +24,7 @@ class LoginController extends Controller
             'password.max' => 'Kolom password maksimal berisi 50 karakter.',
         ];
 
-        Validator::make($request->all(), [
+        Validator::make($request->input(), [
             'username' => 'required|max:15|alpha_dash:ascii|lowercase',
             'password' => 'required|max:50', 
         ],$messages)->validate();
@@ -48,6 +48,20 @@ class LoginController extends Controller
                     'username' => 'Username atau Password tidak sesuai.',
                     'password' => 'Username atau Password tidak sesuai.',
                 ])->withInput();
+        }
+    }
+
+    function adminDashboard()
+    {
+        return view('admin.dashboard');
+    }
+
+    function userHomepage()
+    {
+        if(Auth::user()->role === 'Ketua') {
+            return view('ketua.homepage');
+        }elseif(Auth::user()->role === 'Anggota') {
+            return view('anggota.homepage');
         }
     }
 

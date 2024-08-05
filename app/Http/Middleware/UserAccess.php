@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserAccess
@@ -17,7 +18,14 @@ class UserAccess
     {
         if(auth()->user()->role === $role){
             return $next($request);
+        }else {
+            if (Auth::user()->role === 'Admin') {
+                return redirect(route('admin.dashboard'));
+            }elseif (Auth::user()->role === 'Ketua') {
+                return redirect(route('ketua.homepage'));
+            }elseif (Auth::user()->role === 'Anggota') {
+                return redirect(route('anggota.homepage'));
+            }
         }
-        return redirect('home');
     }
 }
