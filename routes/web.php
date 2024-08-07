@@ -19,8 +19,8 @@ Route::group(['middleware' => 'preventBackHistory'], function(){
             route::get('/dashboard', [LoginController::class, 'adminDashboard'])->name('dashboard');
             route::get('/data/tahun_kegiatan', [TahunKegiatanController::class, 'showDataTahun'])->name('show.data_tahun_kegiatan');
             route::post('/data/tahun_kegiatan/create', [TahunKegiatanController::class, 'createDataTahun'])->name('create.data_tahun_kegiatan');
-            route::put('/data/tahun_kegiatan/{tahun?}/edit', [TahunKegiatanController::class, 'editDataTahun'])->name('edit.data_tahun_kegiatan');
-            route::delete('/data/tahun_kegiatan/{tahun?}/delete', [TahunKegiatanController::class, 'deleteDataTahun'])->name('delete.data_tahun_kegiatan');
+            route::put('/data/tahun_kegiatan/{TahunKegiatan}/edit', [TahunKegiatanController::class, 'editDataTahun'])->name('edit.data_tahun_kegiatan');
+            route::delete('/data/tahun_kegiatan/{TahunKegiatan}/delete', [TahunKegiatanController::class, 'deleteDataTahun'])->name('delete.data_tahun_kegiatan');
             route::get('/data/tahun_kegiatan/{tahun?}/tim_kegiatan', [TimKegiatanController::class, 'showDataTim'])->name('show.data_tim_kegiatan');
             route::post('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/create', [TimKegiatanController::class, 'createDataTim'])->name('create.data_tim_kegiatan');
             route::put('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/{nama}/edit', [TimKegiatanController::class, 'editDataTim'])->name('edit.data_tim_kegiatan');
