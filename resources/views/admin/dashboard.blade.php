@@ -11,7 +11,24 @@
     
 </head>
 <body>
-    <h1>Dashboard Admin.</h1><br>
+<nav class="navbar navbar-expand-lg bg-body-tertiary ">
+        <div class="container-fluid">
+            
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pricing</a>
+        </li>
+    </div>
+    </div>
+</nav>
+<h1>Dashboard Admin.</h1><br>
     <a href="{{ route('logout') }}">Logout</a><br>
     <a href="{{ route('admin.show.data_tahun_kegiatan') }}">Data Tahun Kegiatan</a><br>
 </body>
