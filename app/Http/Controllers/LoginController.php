@@ -36,13 +36,37 @@ class LoginController extends Controller
 
         if(Auth::attempt($inputeddata)) {
             if (Auth::user()->role === 'Admin') {
+                flash()
+                ->killer(true)
+                ->layout('bottomRight')
+                ->timeout(3000)
+                ->success('<b>Berhasil!</b><br>Proses login berhasil.');
+
                 return redirect(route('admin.dashboard'));
             }elseif (Auth::user()->role === 'Ketua') {
+                flash()
+                ->killer(true)
+                ->layout('bottomRight')
+                ->timeout(3000)
+                ->success('<b>Berhasil!</b><br>Proses login berhasil.');
+
                 return redirect(route('ketua.homepage'));
             }elseif (Auth::user()->role === 'Anggota') {
+                flash()
+                ->killer(true)
+                ->layout('bottomRight')
+                ->timeout(3000)
+                ->success('<b>Berhasil!</b><br>Proses login berhasil.');
+
                 return redirect(route('anggota.homepage'));
             }
         }else {
+            flash()
+            ->killer(true)
+            ->layout('bottomRight')
+            ->timeout(3000)
+            ->error('<b>Kesalahan!</b><br>Proses login gagal.');
+
             return redirect(route('login'))
                 ->withErrors([
                     'username' => 'Username atau Password tidak sesuai.',
