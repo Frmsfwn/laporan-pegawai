@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ config('app.name') }} | Admin | Data Tahun Kegiatan</title>
+    <title>{{ config('app.name') }} | Anggota | Data Tahun Kegiatan</title>
 
     {{-- Bootstrap --}}
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -16,7 +16,7 @@
           <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <h1 class="text-center">Data Tahun Kegiatan</h1><br>
+          <h1 class="text-center">Admin.</h1><br>
           <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header align-content-center">
               <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Tahun Kegiatan</h5>
