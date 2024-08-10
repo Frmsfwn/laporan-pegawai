@@ -25,10 +25,10 @@ Route::group(['middleware' => 'preventBackHistory'], function(){
             route::post('/data/tahun_kegiatan/{tahun}/tim_kegiatan/create', [TimKegiatanController::class, 'createDataTim'])->name('create.data_tim_kegiatan');
             route::put('/data/tahun_kegiatan/tim_kegiatan/{TimKegiatan}/edit', [TimKegiatanController::class, 'editDataTim'])->name('edit.data_tim_kegiatan');
             route::delete('/data/tahun_kegiatan/tim_kegiatan/{TimKegiatan}/delete', [TimKegiatanController::class, 'deleteDataTim'])->name('delete.data_tim_kegiatan');
-            route::get('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/{nama}/detail', [TimKegiatanController::class, 'showDetailTim'])->name('show.detail_tim_kegiatan');
-            route::post('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/{nama}/anggota/create', [TimKegiatanController::class, 'createAnggotaTim'])->name('create.anggota_tim');
-            route::put('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/{nama}/anggota/edit', [TimKegiatanController::class, 'editAnggotaTim'])->name('edit.data_anggota_tim');
-            route::delete('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/{nama}/anggota/delete', [TimKegiatanController::class, 'deleteAnggotaTim'])->name('delete.data_anggota_tim');
+            route::get('/data/tahun_kegiatan/{tahun}/tim_kegiatan/{nama}/detail', [TimKegiatanController::class, 'showDetailTim'])->name('show.detail_tim_kegiatan');
+            route::post('/data/tahun_kegiatan/{tahun}/tim_kegiatan/{nama}/anggota/create', [TimKegiatanController::class, 'createAnggotaTim'])->name('create.anggota_tim');
+            route::put('/data/tahun_kegiatan/tim_kegiatan/anggota/{AnggotaTim}/edit', [TimKegiatanController::class, 'editAnggotaTim'])->name('edit.data_anggota_tim');
+            route::delete('/data/tahun_kegiatan/tim_kegiatan/anggota/{AnggotaTim}/delete', [TimKegiatanController::class, 'deleteAnggotaTim'])->name('delete.data_anggota_tim');
         });
         Route::prefix('ketua')->name('ketua.')->middleware(['userAccess:Ketua'])->group(function() {
             route::get('/homepage', [LoginController::class, 'userHomepage'])->name('homepage');

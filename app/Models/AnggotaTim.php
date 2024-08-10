@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
-class TimKegiatan extends Model
+class AnggotaTim extends Model
 {
     use HasFactory;
 
@@ -16,13 +16,11 @@ class TimKegiatan extends Model
 
     public $incrementing = false;
 
-    protected $table = 'tim_kegiatan';
+    protected $table = 'anggota_tim';
 
     protected $fillable = [
         'id',
-        'nama',
-        'id_tahun_kegiatan',
-        'id_ketua',
+        'id_tim_kegiatan',
         'id_anggota',
     ];
 
@@ -32,13 +30,13 @@ class TimKegiatan extends Model
         });
     }
 
-    public function tahun_kegiatan(): BelongsTo
+    public function tim_kegiatan(): BelongsTo
     {
-        return $this->belongsTo(TahunKegiatan::class, 'id_tahun_kegiatan', 'id');
+        return $this->belongsTo(TimKegiatan::class, 'id_tim_kegiatan', 'id');
     }
 
-    public function anggota_tim(): HasMany
+    public function user(): HasMany
     {
-        return $this->hasMany(AnggotaTim::class, 'id_tim_kegiatan', 'id');
+        return $this->hasMany(User::class, 'id', 'id_anggota');
     }
 }

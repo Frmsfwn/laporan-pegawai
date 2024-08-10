@@ -53,7 +53,7 @@
         </div>
     </form>
 
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th>Nama Tim</th>
@@ -66,14 +66,14 @@
                 <tr>
                     <td>{{ $dataTimKegiatan->nama }}</td>
                     <td>
-                        @if($dataTimKegiatan->id_anggota == null)
+                        @if($dataTimKegiatan->anggota_tim == null)
                             -
                         @else    
-                            {{ optional($dataTimKegiatan->id_anggota)->count() }}
+                            {{ optional($dataTimKegiatan->anggota_tim)->count() }}
                         @endif
                     </td>
                     <td>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDataTim{{ $dataTimKegiatan->id }}">Detail</button> |
+                        <a href="{{ route('admin.show.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => $dataTimKegiatan->nama]) }}" class="btn btn-primary">Detail</a> |
                         <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataTimKegiatan->id }}">Ubah</button> |
                         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataTimKegiatan->id }}">Hapus</button>
                     </td>
