@@ -16,10 +16,10 @@
           <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <h1 class="text-center">Data Tim Kegiatan</h1><br>
+          <h1 class="text-center">Admin.</h1><br>
           <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header align-content-center">
-              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Tim Kegiatan</h5>
+              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Tahun Kegiatan</h5>
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
