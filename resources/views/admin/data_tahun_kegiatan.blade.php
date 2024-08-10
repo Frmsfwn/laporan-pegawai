@@ -11,18 +11,52 @@
 
 </head>
 <body>
-    <h1>Admin.</h1><br>
-    <a href="{{ route('logout') }}">Logout</a><br>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <h1 class="text-center">Admin.</h1><br>
+          <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+              <p form class="d-flex m-2 mt-3 me-auto" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success me-2" type="submit">Search</button><br>
+              <button type="button" class="btn-close mt-1" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="{{ route('admin.dashboard') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ route('admin.show.data_tahun_kegiatan') }}">Data Tahun Kegiatan</a>
+                </li>
+                <a class="nav-link" href="{{ route('logout') }}">Logout</a>
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
 
-    <h3>Data Tahun Kegiatan</h3>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahData">Tambah Data</button>
+    {{-- Card Table --}}    
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="bg-light text-center rounded">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h3 class="mb-0">Data Tahun Kegiatan</h3>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahData">Tambah Data</button>
+                    </div>
+                    <div class="table-responsive">
 
     {{-- Modal Tambah Data --}}
     <form action="{{ route('admin.create.data_tahun_kegiatan') }}" method="POST" class="form-card">
         @csrf
         <div class="modal fade" id="modalTambahData" tabindex="-1" aria-labelledby="modalTambahDataLabel" aria-hidden="true">
             <div class="modal-dialog">
-            <div class="modal-content container-fluid p-0">
+            <div class="modal-content container-fluid p-0 container-md">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="formPengajuanLabel">Tambah Data Tahun Kegiatan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -52,11 +86,11 @@
                 </div>
             </div>
             </div>
-        </div>
+        </tr>
+    </div>
     </form>
-
-
-    <table>
+    <div class="table-responsive">
+    <table class="table" style="width: 100%; ">
         <thead>
             <tr>
                 <th>Tahun</th>
