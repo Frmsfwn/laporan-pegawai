@@ -56,12 +56,12 @@
         @csrf
         <div class="modal fade" id="modalTambahData" tabindex="-1" aria-labelledby="modalTambahDataLabel" aria-hidden="true">
             <div class="modal-dialog">
-            <div class="modal-content container-fluid p-0 container-md">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="formPengajuanLabel">Tambah Data Tahun Kegiatan</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+                <div class="modal-content container-fluid p-0 container-md">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalTambahDataLabel">Tambah Data Tahun Kegiatan</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
                         <div class="row justify-content-between text-left mb-2">
                             <div class="col-sm-12 flex-column d-flex">
                                 <label for="tahun_kegiatan" class="form-label">Tahun Kegiatan<span class="text-danger">*</span></label>
@@ -74,21 +74,28 @@
                         <div class="row justify-content-between text-left mb-2">
                             <div class="col-sm-12 flex-column d-flex ">
                                 <label for="nama_kegiatan" class="form-label">Nama Kegiatan<span class="text-danger">*</span></label>
-                                <input type="text" id="nama_kegiatan" name="nama_kegiatan" @if($errors->hasBag('tambah_kegiatan')) value="{{ old('nama_kegiatan') }}" @endif min="" max-length="50" class="form-control @error('nama_kegiatan', 'tambah_data') is-invalid @enderror" @required(true)>
-                                @error('nama_kegiatan', 'tambah_kegiatan')
+                                <input type="text" id="nama_kegiatan" name="nama_kegiatan" @if($errors->hasBag('tambah_data')) value="{{ old('nama_kegiatan') }}" @endif min="" max-length="50" class="form-control @error('nama_kegiatan', 'tambah_data') is-invalid @enderror" @required(true)>
+                                @error('nama_kegiatan', 'tambah_data')
                                     <div class="text-danger"><small>{{ $errors->tambah_data->first('nama_kegiatan') }}</small></div>
                                 @enderror
                             </div>
                         </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-car-on me-1 car-icon"></i>Tambah</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Tambah</button>
+                    </div>
                 </div>
             </div>
-            </div>
-        </tr>
-    </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    @if ($errors->hasBag('tambah_data'))
+                        $('#modalTambahData').modal('show');
+                    @endif
+                });
+            </script>
+        </div>
     </form>
+
     <div class="table-responsive">
     <table class="table" style="width: 100%; ">
         <thead>
@@ -106,33 +113,9 @@
                     <td>
                         <a href="{{ route('admin.show.data_tim_kegiatan', ['tahun' => $dataTahunKegiatan->tahun]) }}" class="btn btn-primary">Detail</a> |
                         <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataTahunKegiatan->id }}">Ubah</button> |
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataTahunKegiatan->id }}">Hapus</button>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataTahunKegiatan->id }}">Hapus</button>
                     </td>
                 </tr>
-
-                {{-- Modal Konfirmasi Hapus Data --}}
-                <div class="modal fade" id="modalHapusData{{ $dataTahunKegiatan->id }}" tabindex="-1" aria-labelledby="modalHapusDataLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="modalHapusDataLabel">Hapus Data Tahun Kegiatan</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Apakah anda yakin ingin menghapus data ini?<br>
-                                <b>{{ $dataTahunKegiatan->tahun }} - {{ $dataTahunKegiatan->nama }}</b>
-                            </div>
-                            <div class="modal-footer">
-                                <form action="{{ route('admin.delete.data_tahun_kegiatan', ['TahunKegiatan' => $dataTahunKegiatan]) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Hapus</button>
-                                </form>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 {{-- Modal Ubah Data --}}
                 <form action="{{ route('admin.edit.data_tahun_kegiatan', ['TahunKegiatan' => $dataTahunKegiatan]) }}" method="POST" class="form-card">
@@ -140,12 +123,12 @@
                     @method('PUT')
                     <div class="modal fade" id="modalUbahData{{ $dataTahunKegiatan->id }}" tabindex="-1" aria-labelledby="modalUbahDataLabel" aria-hidden="true">
                         <div class="modal-dialog">
-                        <div class="modal-content container-fluid p-0">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="modalUbahDataLabel">Ubah Data Tahun Kegiatan</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
+                            <div class="modal-content container-fluid p-0">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="modalUbahDataLabel">Ubah Data Tahun Kegiatan</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
                                     <div class="row justify-content-between text-left mb-2">
                                         <div class="col-sm-12 flex-column d-flex">
                                             <label for="tahun_kegiatan" class="form-label">Tahun Kegiatan<span class="text-danger">*</span></label>
@@ -164,18 +147,52 @@
                                             @enderror
                                         </div>
                                     </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Ubah</button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Ubah</button>
+                                </div>
                             </div>
                         </div>
-                        </div>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                @if ($errors->hasBag($dataTahunKegiatan->id))
+                                    $("#modalUbahData{{ $dataTahunKegiatan->id }}").modal('show');
+                                @endif
+                            });
+                        </script>            
                     </div>
                 </form>
+
+                {{-- Modal Konfirmasi Hapus Data --}}
+                <div class="modal fade" id="modalHapusData{{ $dataTahunKegiatan->id }}" tabindex="-1" aria-labelledby="modalHapusDataLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="modalHapusDataLabel">Hapus Data Tahun Kegiatan</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Apakah anda yakin ingin menghapus data ini?<br>
+                                <b>Tahun : {{ $dataTahunKegiatan->tahun }} | Kegiatan : {{ $dataTahunKegiatan->nama }}</b>
+                            </div>
+                            <div class="modal-footer">
+                                <form action="{{ route('admin.delete.data_tahun_kegiatan', ['TahunKegiatan' => $dataTahunKegiatan]) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                </form>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @empty
-                <a>Data Kosong!</a>
+                <tr>
+                    <td><a>Data Kosong!</a></td>
+                </tr>
             @endforelse
         </tbody>
     </table>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 </body>
 </html>

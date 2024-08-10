@@ -36,12 +36,12 @@ class TahunKegiatanController extends Controller
     function createDataTahun(Request $request)
     {
         $messages = [
-            'tahun_kegiatan.required' => 'Tahun tidak dapat kosong.',
-            'tahun_kegiatan.unique' => 'Tahun telah ada pada database.',
-            'tahun_kegiatan.max_digits' => 'Tahun tidak valid.',
-            'tahun_kegiatan.alpha_dash' => 'Tahun tidak valid.',
+            'tahun_kegiatan.required' => 'Tahun kegiatan tidak dapat kosong.',
+            'tahun_kegiatan.max_digits' => 'Tahun kegiatan tidak valid.',
+            'tahun_kegiatan.numeric' => 'Tahun kegiatan tidak valid.',
+            'tahun_kegiatan.unique' => 'Tahun kegiatan telah ditambahkan pada database.',
             'nama_kegiatan.required' => 'Nama kegiatan tidak dapat kosong.',
-            'nama_kegiatan.max' => 'Nama kegiatan maksimal berisi 50 karakter.',
+            'nama_kegiatan.max' => 'Nama kegiatan maksimal 50 karakter.',
         ];
 
         flash()
@@ -51,7 +51,7 @@ class TahunKegiatanController extends Controller
         ->error('<b>Error!</b><br>Data gagal ditambahkan.');
 
         Validator::make($request->input(), [
-            'tahun_kegiatan' => 'required|unique:tahun_kegiatan,tahun|max_digits:4|numeric',
+            'tahun_kegiatan' => 'required|max_digits:4|numeric|unique:tahun_kegiatan,tahun',
             'nama_kegiatan' => 'required|max:50', 
         ],$messages)->validateWithBag('tambah_data');
 
@@ -74,12 +74,12 @@ class TahunKegiatanController extends Controller
     function editDataTahun(TahunKegiatan $TahunKegiatan,Request $request)
     {
         $messages = [
-            'tahun_kegiatan.required' => 'Tahun tidak dapat kosong.',
-            'tahun_kegiatan.max_digits' => 'Tahun tidak valid.',
-            'tahun_kegiatan.numeric' => 'Tahun tidak valid.',
-            'tahun_kegiatan.unique' => 'Tahun telah ada pada database.',
+            'tahun_kegiatan.required' => 'Tahun kegiatan tidak dapat kosong.',
+            'tahun_kegiatan.max_digits' => 'Tahun kegiatan tidak valid.',
+            'tahun_kegiatan.numeric' => 'Tahun kegiatan tidak valid.',
+            'tahun_kegiatan.unique' => 'Tahun kegiatan telah ditambahkan pada database.',
             'nama_kegiatan.required' => 'Nama kegiatan tidak dapat kosong.',
-            'nama_kegiatan.max' => 'Nama kegiatan maksimal berisi 50 karakter.',
+            'nama_kegiatan.max' => 'Nama kegiatan maksimal 50 karakter.',
         ];
 
         flash()

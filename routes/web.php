@@ -21,10 +21,10 @@ Route::group(['middleware' => 'preventBackHistory'], function(){
             route::post('/data/tahun_kegiatan/create', [TahunKegiatanController::class, 'createDataTahun'])->name('create.data_tahun_kegiatan');
             route::put('/data/tahun_kegiatan/{TahunKegiatan}/edit', [TahunKegiatanController::class, 'editDataTahun'])->name('edit.data_tahun_kegiatan');
             route::delete('/data/tahun_kegiatan/{TahunKegiatan}/delete', [TahunKegiatanController::class, 'deleteDataTahun'])->name('delete.data_tahun_kegiatan');
-            route::get('/data/tahun_kegiatan/{tahun?}/tim_kegiatan', [TimKegiatanController::class, 'showDataTim'])->name('show.data_tim_kegiatan');
-            route::post('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/create', [TimKegiatanController::class, 'createDataTim'])->name('create.data_tim_kegiatan');
-            route::put('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/{nama}/edit', [TimKegiatanController::class, 'editDataTim'])->name('edit.data_tim_kegiatan');
-            route::delete('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/{nama}/delete', [TimKegiatanController::class, 'deleteDataTim'])->name('delete.data_tim_kegiatan');
+            route::get('/data/tahun_kegiatan/{tahun}/tim_kegiatan', [TimKegiatanController::class, 'showDataTim'])->name('show.data_tim_kegiatan');
+            route::post('/data/tahun_kegiatan/{tahun}/tim_kegiatan/create', [TimKegiatanController::class, 'createDataTim'])->name('create.data_tim_kegiatan');
+            route::put('/data/tahun_kegiatan/tim_kegiatan/{TimKegiatan}/edit', [TimKegiatanController::class, 'editDataTim'])->name('edit.data_tim_kegiatan');
+            route::delete('/data/tahun_kegiatan/tim_kegiatan/{TimKegiatan}/delete', [TimKegiatanController::class, 'deleteDataTim'])->name('delete.data_tim_kegiatan');
             route::get('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/{nama}/detail', [TimKegiatanController::class, 'showDetailTim'])->name('show.detail_tim_kegiatan');
             route::post('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/{nama}/anggota/create', [TimKegiatanController::class, 'createAnggotaTim'])->name('create.anggota_tim');
             route::put('/data/tahun_kegiatan/{tahun?}/tim_kegiatan/{nama}/anggota/edit', [TimKegiatanController::class, 'editAnggotaTim'])->name('edit.data_anggota_tim');
