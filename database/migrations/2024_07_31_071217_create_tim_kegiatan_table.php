@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('tim_kegiatan', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama');
+            $table->string('id_tahun_kegiatan')->references('id')->on('tahun_kegiatan')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('id_ketua')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('id_anggota')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

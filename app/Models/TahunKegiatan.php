@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class TahunKegiatan extends Model
@@ -26,5 +27,10 @@ class TahunKegiatan extends Model
         static::creating(function ($model) {
             $model->id = Str::uuid();
         });
+    }
+
+    public function tim_kegiatan(): HasMany
+    {
+        return $this->hasMany(TimKegiatan::class, 'id_tahun_kegiatan', 'id');
     }
 }

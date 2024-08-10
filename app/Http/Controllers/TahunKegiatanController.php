@@ -42,7 +42,6 @@ class TahunKegiatanController extends Controller
             'tahun_kegiatan.alpha_dash' => 'Tahun tidak valid.',
             'nama_kegiatan.required' => 'Nama kegiatan tidak dapat kosong.',
             'nama_kegiatan.max' => 'Nama kegiatan maksimal berisi 50 karakter.',
-            'nama_kegiatan.alpha_num' => 'Nama kegiatan tidak valid.', 
         ];
 
         flash()
@@ -53,7 +52,7 @@ class TahunKegiatanController extends Controller
 
         Validator::make($request->input(), [
             'tahun_kegiatan' => 'required|unique:tahun_kegiatan,tahun|max_digits:4|numeric',
-            'nama_kegiatan' => 'required|max:50|alpha_num', 
+            'nama_kegiatan' => 'required|max:50', 
         ],$messages)->validateWithBag('tambah_data');
 
         $inputeddata = [
@@ -81,7 +80,6 @@ class TahunKegiatanController extends Controller
             'tahun_kegiatan.unique' => 'Tahun telah ada pada database.',
             'nama_kegiatan.required' => 'Nama kegiatan tidak dapat kosong.',
             'nama_kegiatan.max' => 'Nama kegiatan maksimal berisi 50 karakter.',
-            'nama_kegiatan.alpha_num' => 'Nama kegiatan tidak valid.', 
         ];
 
         flash()
@@ -92,7 +90,7 @@ class TahunKegiatanController extends Controller
 
         Validator::make($request->input(), [
             'tahun_kegiatan' => ['required','max_digits:4','numeric',Rule::unique('tahun_kegiatan','tahun')->ignore($TahunKegiatan->id)],
-            'nama_kegiatan' => 'required|max:50|alpha_num', 
+            'nama_kegiatan' => 'required|max:50', 
         ],$messages)->validateWithBag($TahunKegiatan->id);
 
         $TahunKegiatan->update([

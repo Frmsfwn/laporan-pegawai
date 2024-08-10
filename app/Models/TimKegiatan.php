@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class TimKegiatan extends Model
@@ -19,6 +20,7 @@ class TimKegiatan extends Model
     protected $fillable = [
         'id',
         'nama',
+        'id_tahun_kegiatan',
         'id_ketua',
         'id_anggota',
     ];
@@ -27,5 +29,10 @@ class TimKegiatan extends Model
         static::creating(function ($model) {
             $model->id = Str::uuid();
         });
+    }
+
+    public function tahun_kegiatan(): BelongsTo
+    {
+        return $this->belongsTo(TahunKegiatan::class, 'id_tahun_kegiatan', 'id');
     }
 }
