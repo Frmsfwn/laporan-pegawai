@@ -33,4 +33,9 @@ class TahunKegiatan extends Model
     {
         return $this->hasMany(TimKegiatan::class, 'id_tahun_kegiatan', 'id');
     }
+
+    public function laporan_kegiatan(): HasMany
+    {
+        return $this->hasMany(LaporanKegiatan::class, 'id_tahun_kegiatan', 'id');
+    }
 }

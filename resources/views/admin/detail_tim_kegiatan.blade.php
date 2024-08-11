@@ -52,7 +52,7 @@
                             </div>
                             <div class="col-sm-12 flex-column d-flex">
                                 <label for="password_anggota" class="form-label">Password<span class="text-danger">*</span></label>
-                                <input type="password_anggota" id="password_anggota" name="password_anggota" @if($errors->hasBag('tambah_data')) value="{{ old('password_anggota') }}" @endif min="" max-length="25" value="" class="form-control @error('password_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
+                                <input type="password" id="password_anggota" name="password_anggota" @if($errors->hasBag('tambah_data')) value="{{ old('password_anggota') }}" @endif min="" max-length="25" value="" class="form-control @error('password_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
                                 @error('password_anggota', 'tambah_data')
                                     <div class="text-danger"><small>{{ $errors->tambah_data->first('password_anggota') }}</small></div>
                                 @enderror
@@ -210,6 +210,33 @@
                     <td><a>Data Kosong!</a></td>
                 </tr>
             @endforelse
+        </tbody>
+    </table>
+
+    <h3>Data Laporan Kegiatan</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Judul Laporan</th>
+                <th>Nama Tim Kegiatan</th>
+                <th>Informasi Kegiatan</th>
+                <th>Lampiran</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if($data_tim_kegiatan->laporan_kegiatan == null)
+                <tr>
+                    <td><a>Data Kosong!</a></td>
+                </tr>
+            @else
+                <tr>
+                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->judul_laporan }}</td>
+                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->nama_tim_kegiatan }}</td>
+                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->informasi_kegiatan }}</td>
+                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->lampiran }}</td>
+                </tr>
+            @endif
         </tbody>
     </table>
 

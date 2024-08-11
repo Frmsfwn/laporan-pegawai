@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
-class TimKegiatan extends Model
+class LaporanKegiatan extends Model
 {
     use HasFactory;
 
@@ -17,14 +17,17 @@ class TimKegiatan extends Model
 
     public $incrementing = false;
 
-    protected $table = 'tim_kegiatan';
+    protected $table = 'laporan_kegiatan';
 
     protected $fillable = [
         'id',
-        'nama',
+        'id_tim_kegiatan',
         'id_tahun_kegiatan',
-        'id_ketua',
         'id_anggota',
+        'judul_laporan',
+        'nama_tim_kegiatan',
+        'informasi_kegiatan',
+        'lampiran',
     ];
 
     public static function booted() {
@@ -33,18 +36,18 @@ class TimKegiatan extends Model
         });
     }
 
+    public function tim_kegiatan(): BelongsTo
+    {
+        return $this->belongsTo(LaporanKegiatan::class, 'id_tim_kegiatan', 'id');
+    }
+
     public function tahun_kegiatan(): BelongsTo
     {
         return $this->belongsTo(TahunKegiatan::class, 'id_tahun_kegiatan', 'id');
     }
 
-    public function anggota_tim(): HasMany
+    public function anggota_tim(): HasOne
     {
-        return $this->hasMany(AnggotaTim::class, 'id_tim_kegiatan', 'id');
-    }
-
-    public function laporan_kegiatan(): HasOne
-    {
-        return $this->hasOne(LaporanKegiatan::class, 'id_tim_kegiatan', 'id');
+        return $this->hasOne(User::class, 'id', 'id_anggota');
     }
 }
