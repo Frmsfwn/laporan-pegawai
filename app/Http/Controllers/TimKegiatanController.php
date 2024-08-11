@@ -373,7 +373,11 @@ class TimKegiatanController extends Controller
         ->timeout(3000)
         ->success('<b>Berhasil!</b><br>Data laporan kegiatan berhasil diubah.');
 
-        return redirect(route('ketua.show.detail_tim_kegiatan', ['tahun' => $LaporanKegiatan->tahun_kegiatan->tahun, 'nama' => $LaporanKegiatan->tim_kegiatan->nama]));
+        if(Auth::user()->role === 'Ketua') {
+            return redirect(route('ketua.show.detail_tim_kegiatan', ['tahun' => $LaporanKegiatan->tahun_kegiatan->tahun, 'nama' => $LaporanKegiatan->tim_kegiatan->nama]));
+        }elseif(Auth::user()->role === 'Anggota') {
+            return redirect(route('anggota.show.detail_tim_kegiatan', ['tahun' => $LaporanKegiatan->tahun_kegiatan->tahun, 'nama' => $LaporanKegiatan->tim_kegiatan->nama]));
+        }
     }
 
     function deleteLaporanKegiatan(LaporanKegiatan $LaporanKegiatan)

@@ -39,6 +39,8 @@ Route::group(['middleware' => 'preventBackHistory'], function(){
         });
         Route::prefix('anggota')->name('anggota.')->middleware(['userAccess:Anggota'])->group(function() {
             route::get('/homepage', [LoginController::class, 'userHomepage'])->name('homepage');
+            route::get('/data/tahun_kegiatan/{tahun}/tim_kegiatan/{nama}/detail', [TimKegiatanController::class, 'showDetailTim'])->name('show.detail_tim_kegiatan');
+            route::put('/data/tahun_kegiatan/tim_kegiatan/laporan_kegiatan/{LaporanKegiatan}/edit', [TimKegiatanController::class, 'editLaporanKegiatan'])->name('edit.laporan_kegiatan');
         });
     });
 });

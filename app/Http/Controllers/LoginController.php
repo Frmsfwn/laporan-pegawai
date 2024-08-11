@@ -91,7 +91,9 @@ class LoginController extends Controller
 
         }elseif(Auth::user()->role === 'Anggota') {
             
-            return view('anggota.homepage');
+            $data_tim_kegiatan = Auth::user()->anggota_tim->tim_kegiatan;
+            return view('anggota.homepage')
+                ->with('data_tim_kegiatan',$data_tim_kegiatan);
 
         }
     }
