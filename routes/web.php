@@ -32,6 +32,10 @@ Route::group(['middleware' => 'preventBackHistory'], function(){
         });
         Route::prefix('ketua')->name('ketua.')->middleware(['userAccess:Ketua'])->group(function() {
             route::get('/homepage', [LoginController::class, 'userHomepage'])->name('homepage');
+            route::get('/data/tahun_kegiatan/{tahun}/tim_kegiatan/{nama}/detail', [TimKegiatanController::class, 'showDetailTim'])->name('show.detail_tim_kegiatan');
+            route::post('/data/tahun_kegiatan/{tahun}/tim_kegiatan/{nama}/laporan_kegiatan/create', [TimKegiatanController::class, 'createLaporanKegiatan'])->name('create.laporan_kegiatan');
+            route::put('/data/tahun_kegiatan/tim_kegiatan/laporan_kegiatan/{LaporanKegiatan}/edit', [TimKegiatanController::class, 'editLaporanKegiatan'])->name('edit.laporan_kegiatan');
+            route::delete('/data/tahun_kegiatan/tim_kegiatan/laporan_kegiatan/{LaporanKegiatan}/delete', [TimKegiatanController::class, 'deleteLaporanKegiatan'])->name('delete.laporan_kegiatan');
         });
         Route::prefix('anggota')->name('anggota.')->middleware(['userAccess:Anggota'])->group(function() {
             route::get('/homepage', [LoginController::class, 'userHomepage'])->name('homepage');

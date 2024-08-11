@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -83,9 +84,15 @@ class LoginController extends Controller
     function userHomepage()
     {
         if(Auth::user()->role === 'Ketua') {
-            return view('ketua.homepage');
+
+            $data_tim_kegiatan = Auth::user()->anggota_tim->tim_kegiatan;
+            return view('ketua.homepage')
+                ->with('data_tim_kegiatan',$data_tim_kegiatan);
+
         }elseif(Auth::user()->role === 'Anggota') {
+            
             return view('anggota.homepage');
+
         }
     }
 

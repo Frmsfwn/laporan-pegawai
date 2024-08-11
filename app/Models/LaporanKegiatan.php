@@ -38,7 +38,7 @@ class LaporanKegiatan extends Model
 
     public function tim_kegiatan(): BelongsTo
     {
-        return $this->belongsTo(LaporanKegiatan::class, 'id_tim_kegiatan', 'id');
+        return $this->belongsTo(TimKegiatan::class, 'id_tim_kegiatan', 'id');
     }
 
     public function tahun_kegiatan(): BelongsTo

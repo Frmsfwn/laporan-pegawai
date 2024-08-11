@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnggotaTim;
+use App\Models\LaporanKegiatan;
 use App\Models\TahunKegiatan;
 use App\Models\TimKegiatan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -125,11 +127,29 @@ class TimKegiatanController extends Controller
 
     function showDetailTim()
     {
-        $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-        $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
+        if(Auth::user()->role === 'Admin') {
 
-        return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
-            ->with('data_tim_kegiatan',$data_tim_kegiatan);
+            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
+            return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
+                ->with('data_tim_kegiatan',$data_tim_kegiatan);
+        
+        }elseif(Auth::user()->role === 'Ketua') {
+            
+            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
+            return view('ketua.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
+                ->with('data_tim_kegiatan',$data_tim_kegiatan);
+
+
+        }elseif(Auth::user()->role === 'Anggota') {
+            
+            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
+            return view('anggota.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
+                ->with('data_tim_kegiatan',$data_tim_kegiatan);
+    
+        }    
     }
 
     function createAnggotaTim(Request $request)
@@ -253,5 +273,126 @@ class TimKegiatanController extends Controller
         ->success('<b>Berhasil!</b><br>Data berhasil dihapus.');
 
         return redirect(route('admin.show.detail_tim_kegiatan', ['tahun' => $data_tahun_kegiatan, 'nama' => $data_tim_kegiatan]));
+    }
+
+    function createLaporanKegiatan(Request $request)
+    {
+        $messages = [
+            'judul_laporan.required' => 'Judul laporan tidak dapat kosong.',
+            'judul_laporan.max' => 'Judul laporan maksimal 25 karakter.',
+            'judul_laporan.unique' => 'Judul laporan telah ditambahkan pada database.',
+            'informasi_kegiatan.required' => 'Informasi kegiatan tidak dapat kosong.',
+            'informasi_kegiatan.max' => 'Informasi kegiatan maksimal 25 karakter.',
+            'lampiran_kegiatan.required' => 'Lampiran kegiatan tidak dapat kosong.',
+        ];
+
+        flash()
+        ->killer(true)
+        ->layout('bottomRight')
+        ->timeout(3000)
+        ->error('<b>Error!</b><br>Data laporan kegiatan gagal ditambahkan.');
+
+        Validator::make($request->all(), [
+            'judul_laporan' => 'required|max:25|unique:laporan_kegiatan,judul_laporan',
+            'informasi_kegiatan' => 'required|max:25',
+            'lampiran_kegiatan' => 'required',
+        ],$messages)->validateWithBag('tambah_data');
+
+        $file = $request->file('lampiran_kegiatan');
+        $fileName = time().'.'.$file->extension();
+        $file->move(public_path('lampiran'), $fileName);
+        $filePath = 'lampiran/' . $fileName;
+
+        $data = [
+            'id_tim_kegiatan' => TimKegiatan::where('nama',request('nama'))->first()->id,
+            'id_tahun_kegiatan' => TahunKegiatan::where('tahun',request('tahun'))->first()->id,
+            'id_anggota' => Auth::id(),
+            'judul_laporan' => $request->input('judul_laporan'),
+            'nama_tim_kegiatan' => request('nama'),
+            'informasi_kegiatan' => $request->input('informasi_kegiatan'),
+            'lampiran' => $filePath,
+        ];
+
+        LaporanKegiatan::create($data);
+
+        flash()
+        ->killer(true)
+        ->layout('bottomRight')
+        ->timeout(3000)
+        ->success('<b>Berhasil!</b><br>Data laporan kegiatan berhasil ditambahkan.');
+
+        return redirect(route('ketua.show.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')]));
+    }
+
+    function editLaporanKegiatan(LaporanKegiatan $LaporanKegiatan, Request $request)
+    {
+        $messages = [
+            'judul_laporan.required' => 'Judul laporan tidak dapat kosong.',
+            'judul_laporan.max' => 'Judul laporan maksimal 25 karakter.',
+            'judul_laporan.unique' => 'Judul laporan telah ditambahkan pada database.',
+            'informasi_kegiatan.required' => 'Informasi kegiatan tidak dapat kosong.',
+            'informasi_kegiatan.max' => 'Informasi kegiatan maksimal 25 karakter.',
+        ];
+
+        flash()
+        ->killer(true)
+        ->layout('bottomRight')
+        ->timeout(3000)
+        ->error('<b>Error!</b><br>Data laporan kegiatan gagal diubah.');
+
+        Validator::make($request->all(), [
+            'judul_laporan' => ['required','max:25',Rule::unique('laporan_kegiatan','judul_laporan')->ignore($LaporanKegiatan->id)],
+            'informasi_kegiatan' => 'required|max:25',
+        ],$messages)->validateWithBag($LaporanKegiatan->id);
+
+        if ($request->hasFile('lampiran_kegiatan')) {
+            if (File::exists($LaporanKegiatan->lampiran))
+            {
+                File::delete($LaporanKegiatan->lampiran);
+            }            
+            $newFile = $request->file('lampiran_kegiatan');
+            $fileName = time().'.'.$newFile->extension();
+            $newFile->move(public_path('lampiran'), $fileName);
+            $filePath = 'lampiran/' . $fileName;
+
+            $LaporanKegiatan->update([
+                'lampiran' => $filePath
+            ]);
+        }
+
+        $LaporanKegiatan->update([
+            'id_anggota' => Auth::id(),
+            'judul_laporan' => $request->input('judul_laporan'),
+            'nama_tim_kegiatan' => $LaporanKegiatan->tim_kegiatan->nama,
+            'informasi_kegiatan' => $request->input('informasi_kegiatan'),
+        ]);
+
+        flash()
+        ->killer(true)
+        ->layout('bottomRight')
+        ->timeout(3000)
+        ->success('<b>Berhasil!</b><br>Data laporan kegiatan berhasil diubah.');
+
+        return redirect(route('ketua.show.detail_tim_kegiatan', ['tahun' => $LaporanKegiatan->tahun_kegiatan->tahun, 'nama' => $LaporanKegiatan->tim_kegiatan->nama]));
+    }
+
+    function deleteLaporanKegiatan(LaporanKegiatan $LaporanKegiatan)
+    {
+        $data_tahun_kegiatan = $LaporanKegiatan->tahun_kegiatan->tahun;
+        $data_tim_kegiatan = $LaporanKegiatan->tim_kegiatan->nama;
+
+        LaporanKegiatan::destroy($LaporanKegiatan->id);
+
+        if (File::exists(public_path($LaporanKegiatan->lampiran))) {
+            File::delete(public_path($LaporanKegiatan->lampiran));
+        }
+
+        flash()
+        ->killer(true)
+        ->layout('bottomRight')
+        ->timeout(3000)
+        ->success('<b>Berhasil!</b><br>Data laporan kegiatan berhasil dihapus.');
+
+        return redirect(route('ketua.show.detail_tim_kegiatan', ['tahun' => $data_tahun_kegiatan, 'nama' => $data_tim_kegiatan]));
     }
 }
