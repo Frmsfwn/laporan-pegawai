@@ -25,7 +25,7 @@
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                 <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="{{ route('admin.dashboard') }}">Home</a>
+                  <a class="nav-link" href="{{ route('admin.dashboard') }}">Home</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{{ route('admin.show.data_tahun_kegiatan') }}">Data Tahun Kegiatan</a>
