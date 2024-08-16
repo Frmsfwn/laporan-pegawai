@@ -37,6 +37,6 @@ class AnggotaTim extends Model
 
     public function user(): HasMany
     {
-        return $this->hasMany(User::class, 'id', 'id_anggota');
+        return $this->hasMany(User::class, 'id', 'id_anggota')->orderBy('updated_at','desc');
     }
 }

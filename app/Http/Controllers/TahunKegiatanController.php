@@ -10,29 +10,6 @@ use Illuminate\Validation\Rule;
 
 class TahunKegiatanController extends Controller
 {
-    function showDataTahun()
-    {
-        if(Auth::user()->role === 'Admin') {
-
-            $data_tahun_kegiatan = TahunKegiatan::all();
-            return view('admin.data_tahun_kegiatan')
-                ->with('data_tahun_kegiatan',$data_tahun_kegiatan);
-
-        }elseif(Auth::user()->role === 'Ketua') {
-            
-            $data_tahun_kegiatan = TahunKegiatan::all();
-            return view('ketua.data_tahun_kegiatan')
-                ->with('data_tahun_kegiatan',$data_tahun_kegiatan);
-
-        }elseif(Auth::user()->role === 'Anggota') {
-
-            $data_tahun_kegiatan = TahunKegiatan::all();
-            return view('anggota.data_tahun_kegiatan')
-                ->with('data_tahun_kegiatan',$data_tahun_kegiatan);
-
-        }
-    }
-
     function createDataTahun(Request $request)
     {
         $messages = [
@@ -68,7 +45,7 @@ class TahunKegiatanController extends Controller
         ->timeout(3000)
         ->success('<b>Berhasil!</b><br>Data berhasil ditambahkan.');
 
-        return redirect(route('admin.show.data_tahun_kegiatan'));
+        return redirect(route('admin.homepage'));
     }
 
     function editDataTahun(TahunKegiatan $TahunKegiatan,Request $request)
@@ -104,7 +81,7 @@ class TahunKegiatanController extends Controller
         ->timeout(3000)
         ->success('<b>Berhasil!</b><br>Data berhasil diubah.');
 
-        return redirect(route('admin.show.data_tahun_kegiatan'));
+        return redirect(route('admin.homepage'));
     }
 
     function deleteDataTahun(TahunKegiatan $TahunKegiatan)
@@ -117,6 +94,6 @@ class TahunKegiatanController extends Controller
         ->timeout(3000)
         ->success('<b>Berhasil!</b><br>Data berhasil dihapus.');
 
-        return redirect(route('admin.show.data_tahun_kegiatan'));
+        return redirect(route('admin.homepage'));
     }
 }

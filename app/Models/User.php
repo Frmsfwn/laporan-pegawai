@@ -49,9 +49,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo(AnggotaTim::class, 'id', 'id_anggota');
     }
-
-    public function laporan_kegiatan(): BelongsTo
-    {
-        return $this->belongsTo(LaporanKegiatan::class, 'id', 'id_anggota');
-    }
 }

@@ -25,10 +25,7 @@
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('admin.dashboard') }}">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('admin.show.data_tahun_kegiatan') }}">Data Tahun Kegiatan</a>
+                  <a class="nav-link" href="{{ route('admin.homepage') }}">Home</a>
                 </li>
                 <a class="nav-link" href="{{ route('logout') }}">Logout</a>
               </form>
@@ -39,16 +36,15 @@
 
     <div class="container-fluid pt-4 px-4">
         <div class="col-12">
-            <div class="bg-light card text-center rounded p-3">
+            <div class="bg-light card text-center rounded p-3 mb-3">
                 <div class="row align-items-center justify-content-between mb-4">
                     <div class="col-12 col-md-8 col-xxl-10">
-                        <h3 class="mb-0">Data Anggota Tim</h3>
+                        <h3 class="mb-0">Data Anggota Tim Kegiatan</h3>
                     </div>
                     <div class="col-7 col-md-4 col-xxl-2 mt-2">
                         <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalTambahData">Tambah Data</button>
                     </div>
                 </div>
-
                 {{-- Modal Tambah Data --}}
                 <form action="{{ route('admin.create.anggota_tim', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}" method="POST" class="form-card">
                     @csrf
@@ -115,7 +111,6 @@
                         </script>
                     </div>
                 </form>
-
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -140,7 +135,6 @@
                                             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataAnggota->id }}">Hapus</button>
                                         </td>
                                     </tr>
-
                                     {{-- Modal Ubah Data --}}
                                     <form action="{{ route('admin.edit.data_anggota_tim', ['AnggotaTim' => $dataAnggota]) }}" method="POST" class="form-card">
                                         @csrf
@@ -177,7 +171,7 @@
                                                             </div>
                                                             <div class="col-sm-12 flex-column d-flex">
                                                                 <label for="password_anggota" class="form-label">Password<span class="text-danger">*</span></label>
-                                                                <input type="password_anggota" id="password_anggota" name="password_anggota" @if($errors->hasBag($dataAnggota->id)) value="{{ old('password_anggota') }}" @endif min="" max-length="25" value="" class="form-control @error('password_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
+                                                                <input type="password" id="password_anggota" name="password_anggota" @if($errors->hasBag($dataAnggota->id)) value="{{ old('password_anggota') }}" @endif min="" max-length="25" value="" class="form-control @error('password_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
                                                                 @error('password_anggota', $dataAnggota->id)
                                                                     <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('password_anggota') }}</small></div>
                                                                 @enderror
@@ -213,7 +207,6 @@
                                             </script>            
                                         </div>
                                     </form>
-
                                     {{-- Modal Konfirmasi Hapus Data --}}
                                     <div class="modal fade" id="modalHapusData{{ $dataAnggota->id }}" tabindex="-1" aria-labelledby="modalHapusDataLabel" aria-hidden="true">
                                         <div class="modal-dialog">
@@ -255,6 +248,7 @@
                         <h3 class="mb-0">Data Laporan Kegiatan</h3>
                     </div>
                 </div>
+                <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
@@ -265,20 +259,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($data_tim_kegiatan->laporan_kegiatan == null)
+                            @forelse ($data_tim_kegiatan->laporan_kegiatan as $dataLaporanKegiatan)
+                                <tr>
+                                    <td>{{ $dataLaporanKegiatan->judul_laporan }}</td>
+                                    <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
+                                    <td>{{ $dataLaporanKegiatan->informasi_kegiatan }}</td>
+                                    <td>{{ $dataLaporanKegiatan->lampiran }}</td>
+                                </tr>
+                            @empty
                                 <tr>
                                     <td><a>Data Kosong!</a></td>
                                 </tr>
-                            @else
-                                <tr>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->judul_laporan }}</td>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->nama_tim_kegiatan }}</td>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->informasi_kegiatan }}</td>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->lampiran }}</td>
-                                </tr>
-                            @endif
+                            @endforelse
                         </tbody>
                     </table>
+                </div>
             </div>
         </div>
     </div>
