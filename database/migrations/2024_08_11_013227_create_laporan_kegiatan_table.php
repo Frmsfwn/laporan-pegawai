@@ -12,7 +12,6 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('id_tim_kegiatan')->references('id')->on('tim_kegiatan')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignUuid('id_tahun_kegiatan')->references('id')->on('tahun_kegiatan')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignUuid('id_anggota')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('judul_laporan');
             $table->string('nama_tim_kegiatan');
             $table->string('informasi_kegiatan');

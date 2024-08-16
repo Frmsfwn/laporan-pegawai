@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TahunKegiatan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,14 +38,27 @@ class LoginController extends Controller
 
         if(Auth::attempt($inputeddata)) {
             if (Auth::user()->role === 'Admin') {
+
                 flash()
                 ->killer(true)
                 ->layout('bottomRight')
                 ->timeout(3000)
                 ->success('<b>Berhasil!</b><br>Proses login berhasil.');
 
-                return redirect(route('admin.dashboard'));
+                return redirect(route('admin.homepage'));
+
+            }elseif (Auth::user()->role === 'Manajemen') {
+
+                flash()
+                ->killer(true)
+                ->layout('bottomRight')
+                ->timeout(3000)
+                ->success('<b>Berhasil!</b><br>Proses login berhasil.');
+
+                return redirect(route('manajemen.homepage'));
+
             }elseif (Auth::user()->role === 'Ketua') {
+                
                 flash()
                 ->killer(true)
                 ->layout('bottomRight')
@@ -52,7 +66,9 @@ class LoginController extends Controller
                 ->success('<b>Berhasil!</b><br>Proses login berhasil.');
 
                 return redirect(route('ketua.homepage'));
+
             }elseif (Auth::user()->role === 'Anggota') {
+                
                 flash()
                 ->killer(true)
                 ->layout('bottomRight')
@@ -60,6 +76,7 @@ class LoginController extends Controller
                 ->success('<b>Berhasil!</b><br>Proses login berhasil.');
 
                 return redirect(route('anggota.homepage'));
+
             }
         }else {
             flash()
@@ -76,14 +93,19 @@ class LoginController extends Controller
         }
     }
 
-    function adminDashboard()
+    function Homepage()
     {
-        return view('admin.dashboard');
-    }
+        if(Auth::user()->role === 'Admin') {
 
-    function userHomepage()
-    {
-        if(Auth::user()->role === 'Ketua') {
+            $data_tahun_kegiatan = TahunKegiatan::orderBy('updated_at','desc')->get();
+            return view('admin.homepage')
+                ->with('data_tahun_kegiatan',$data_tahun_kegiatan);
+
+        }elseif(Auth::user()->role === 'Manajemen') {
+
+            return view('manajemen.homepage');
+
+        }elseif(Auth::user()->role === 'Ketua') {
 
             $data_tim_kegiatan = Auth::user()->anggota_tim->tim_kegiatan;
             return view('ketua.homepage')

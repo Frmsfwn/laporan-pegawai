@@ -23,7 +23,6 @@ class LaporanKegiatan extends Model
         'id',
         'id_tim_kegiatan',
         'id_tahun_kegiatan',
-        'id_anggota',
         'judul_laporan',
         'nama_tim_kegiatan',
         'informasi_kegiatan',
@@ -44,10 +43,5 @@ class LaporanKegiatan extends Model
     public function tahun_kegiatan(): BelongsTo
     {
         return $this->belongsTo(TahunKegiatan::class, 'id_tahun_kegiatan', 'id');
-    }
-
-    public function anggota_tim(): HasOne
-    {
-        return $this->hasOne(User::class, 'id', 'id_anggota');
     }
 }

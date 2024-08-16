@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 class TimKegiatan extends Model
@@ -43,8 +42,8 @@ class TimKegiatan extends Model
         return $this->hasMany(AnggotaTim::class, 'id_tim_kegiatan', 'id');
     }
 
-    public function laporan_kegiatan(): HasOne
+    public function laporan_kegiatan(): HasMany
     {
-        return $this->hasOne(LaporanKegiatan::class, 'id_tim_kegiatan', 'id');
+        return $this->hasMany(LaporanKegiatan::class, 'id_tim_kegiatan', 'id');
     }
 }

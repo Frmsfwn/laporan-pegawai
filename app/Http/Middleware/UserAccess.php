@@ -16,15 +16,27 @@ class UserAccess
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        if(auth()->user()->role === $role){
+        if (Auth::user()->role === $role) {
+
             return $next($request);
-        }else {
+
+        }else{
             if (Auth::user()->role === 'Admin') {
-                return redirect(route('admin.dashboard'));
+
+                return redirect(route('admin.homepage'));
+                
+            }elseif (Auth::user()->role === 'Manajemen') {
+
+                return redirect(route('manajemen.homepage'));
+
             }elseif (Auth::user()->role === 'Ketua') {
+
                 return redirect(route('ketua.homepage'));
+
             }elseif (Auth::user()->role === 'Anggota') {
+
                 return redirect(route('anggota.homepage'));
+
             }
         }
     }

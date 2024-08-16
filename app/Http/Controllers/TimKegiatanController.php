@@ -163,7 +163,7 @@ class TimKegiatanController extends Controller
             'nama_anggota.max' => 'Nama maksimal 25 karakter.',
             'username_anggota.required' => 'Username tidak dapat kosong.',
             'username_anggota.max:25' => 'Username maksimal 25 karakter.',
-            'username_anggota.unique' => 'Username telah ditambahkan pada databsse.',
+            'username_anggota.unique' => 'Username telah ditambahkan pada database.',
             'password_anggota.required' => 'Password tidak dapat kosong.',
             'password_anggota.max' => 'Password maksimal 25 karakter.',
             'role_anggota.required' => 'Role tidak dapat kosong.',
@@ -282,8 +282,11 @@ class TimKegiatanController extends Controller
             'judul_laporan.max' => 'Judul laporan maksimal 25 karakter.',
             'judul_laporan.unique' => 'Judul laporan telah ditambahkan pada database.',
             'informasi_kegiatan.required' => 'Informasi kegiatan tidak dapat kosong.',
-            'informasi_kegiatan.max' => 'Informasi kegiatan maksimal 25 karakter.',
+            'informasi_kegiatan.max' => 'Informasi kegiatan maksimal 100 karakter.',
             'lampiran_kegiatan.required' => 'Lampiran kegiatan tidak dapat kosong.',
+            'lampiran_kegiatan.max' => 'Ukuran maksimal file adalah 100MB.',
+            'lampiran_kegiatan.mimes' => 'File tidak valid.',
+            'lampiran_kegiatan.extensions' => 'File tidak valid.',
         ];
 
         flash()
@@ -294,8 +297,8 @@ class TimKegiatanController extends Controller
 
         Validator::make($request->all(), [
             'judul_laporan' => 'required|max:25|unique:laporan_kegiatan,judul_laporan',
-            'informasi_kegiatan' => 'required|max:25',
-            'lampiran_kegiatan' => 'required',
+            'informasi_kegiatan' => 'required|max:100',
+            'lampiran_kegiatan' => 'required|file|max:102400|mimes:doc,docx,ppt,pptx,xls,xlsx,odt,odf,ods,odp,xml,pdf,one,rtf,txt,csv,html,htm,rar,zip,7zip,jpg,jpeg,png,heif,heic|extensions:doc,docx,ppt,pptx,xls,xlsx,odt,odf,ods,odp,xml,pdf,one,rtf,txt,csv,html,htm,rar,zip,7zip,jpg,jpeg,png,heif,heic',
         ],$messages)->validateWithBag('tambah_data');
 
         $file = $request->file('lampiran_kegiatan');
@@ -306,7 +309,6 @@ class TimKegiatanController extends Controller
         $data = [
             'id_tim_kegiatan' => TimKegiatan::where('nama',request('nama'))->first()->id,
             'id_tahun_kegiatan' => TahunKegiatan::where('tahun',request('tahun'))->first()->id,
-            'id_anggota' => Auth::id(),
             'judul_laporan' => $request->input('judul_laporan'),
             'nama_tim_kegiatan' => request('nama'),
             'informasi_kegiatan' => $request->input('informasi_kegiatan'),
@@ -331,7 +333,10 @@ class TimKegiatanController extends Controller
             'judul_laporan.max' => 'Judul laporan maksimal 25 karakter.',
             'judul_laporan.unique' => 'Judul laporan telah ditambahkan pada database.',
             'informasi_kegiatan.required' => 'Informasi kegiatan tidak dapat kosong.',
-            'informasi_kegiatan.max' => 'Informasi kegiatan maksimal 25 karakter.',
+            'informasi_kegiatan.max' => 'Informasi kegiatan maksimal 100 karakter.',
+            'lampiran_kegiatan.max' => 'Ukuran maksimal file adalah 100MB.',
+            'lampiran_kegiatan.mimes' => 'File tidak valid.',
+            'lampiran_kegiatan.extensions' => 'File tidak valid.',
         ];
 
         flash()
@@ -342,7 +347,8 @@ class TimKegiatanController extends Controller
 
         Validator::make($request->all(), [
             'judul_laporan' => ['required','max:25',Rule::unique('laporan_kegiatan','judul_laporan')->ignore($LaporanKegiatan->id)],
-            'informasi_kegiatan' => 'required|max:25',
+            'informasi_kegiatan' => 'required|max:100',
+            'lampiran_kegiatan' => 'file|max:102400|mimes:doc,docx,ppt,pptx,xls,xlsx,odt,odf,ods,odp,xml,pdf,one,rtf,txt,csv,html,htm,rar,zip,7zip,jpg,jpeg,png,heif,heic|extensions:doc,docx,ppt,pptx,xls,xlsx,odt,odf,ods,odp,xml,pdf,one,rtf,txt,csv,html,htm,rar,zip,7zip,jpg,jpeg,png,heif,heic',
         ],$messages)->validateWithBag($LaporanKegiatan->id);
 
         if ($request->hasFile('lampiran_kegiatan')) {
@@ -361,7 +367,6 @@ class TimKegiatanController extends Controller
         }
 
         $LaporanKegiatan->update([
-            'id_anggota' => Auth::id(),
             'judul_laporan' => $request->input('judul_laporan'),
             'nama_tim_kegiatan' => $LaporanKegiatan->tim_kegiatan->nama,
             'informasi_kegiatan' => $request->input('informasi_kegiatan'),
@@ -398,5 +403,15 @@ class TimKegiatanController extends Controller
         ->success('<b>Berhasil!</b><br>Data laporan kegiatan berhasil dihapus.');
 
         return redirect(route('ketua.show.detail_tim_kegiatan', ['tahun' => $data_tahun_kegiatan, 'nama' => $data_tim_kegiatan]));
+    }
+
+    function downloadLaporan(LaporanKegiatan $LaporanKegiatan)
+    {
+        $path = $LaporanKegiatan->lampiran;
+
+        $_PATH_INFO = pathinfo($LaporanKegiatan->lampiran); 
+        $_EXTENSTION = $_PATH_INFO['extension'];
+
+        return response()->download($path, "$LaporanKegiatan->judul_laporan.$_EXTENSTION");
     }
 }

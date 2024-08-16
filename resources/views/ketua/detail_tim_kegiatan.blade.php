@@ -34,7 +34,6 @@
           </div>
         </div>
     </nav>
-
     <div class="container-fluid pt-4 px-4">
         <div class="col-12">
             <div class="bg-light card text-center rounded p-3 mb-3">
@@ -43,7 +42,6 @@
                         <h3 class="mb-0">Data Anggota Tim Kegiatan</h3>
                     </div>
                 </div>
-
                 {{-- Modal Tambah Data --}}
                 <form action="{{ route('ketua.create.laporan_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}" method="POST" enctype="multipart/form-data" class="form-card">
                     @csrf
@@ -58,7 +56,7 @@
                                     <div class="row justify-content-between text-left mb-2">
                                         <div class="col-sm-12 flex-column d-flex">
                                             <label for="judul_laporan" class="form-label">Judul Laporan<span class="text-danger">*</span></label>
-                                            <input type="text" id="judul_laporan" name="judul_laporan" @if($errors->hasBag('tambah_data')) value="{{ old('judul_laporan') }}" @endif min="" max-length="25" value="" class="form-control @error('judul_laporan', 'tambah_data') is-invalid @enderror" @required(true)>
+                                            <input type="text" name="judul_laporan" id="judul_laporan" max-length="25" @if($errors->hasBag('tambah_data')) value="{{ old('judul_laporan') }}" @endif  class="form-control @error('judul_laporan', 'tambah_data') is-invalid @enderror" @required(true)>
                                             @error('judul_laporan', 'tambah_data')
                                                 <div class="text-danger"><small>{{ $errors->tambah_data->first('judul_laporan') }}</small></div>
                                             @enderror
@@ -67,7 +65,7 @@
                                     <div class="row justify-content-between text-left mb-2">
                                         <div class="col-sm-12 flex-column d-flex ">
                                             <label for="informasi_kegiatan" class="form-label">Informasi Kegiatan<span class="text-danger">*</span></label>
-                                            <input type="text" id="informasi_kegiatan" name="informasi_kegiatan" @if($errors->hasBag('tambah_data')) value="{{ old('informasi_kegiatan') }}" @endif min="" max-length="25" class="form-control @error('informasi_kegiatan', 'tambah_data') is-invalid @enderror" @required(true)>
+                                            <textarea name="informasi_kegiatan" id="informasi_kegiatan" max-length="100"  class="form-control @error('informasi_kegiatan', 'tambah_data') is-invalid @enderror" @required(true)>@if($errors->hasBag('tambah_data')){{{ old('informasi_kegiatan') }}}@endif</textarea>
                                             @error('informasi_kegiatan', 'tambah_data')
                                                 <div class="text-danger"><small>{{ $errors->tambah_data->first('informasi_kegiatan') }}</small></div>
                                             @enderror
@@ -76,7 +74,7 @@
                                     <div class="row justify-content-between text-left mb-2">
                                         <div class="col-12">
                                             <label for="lampiran_kegiatan" class="form-label">Lampiran Kegiatan<span class="text-danger">*</span></label>
-                                            <input class="form-control @error('lampiran_kegiatan', 'tambah_data') is-invalid @enderror" type="file" name="lampiran_kegiatan" id="lampiran_kendaraan" @required(true)>
+                                            <input type="file" name="lampiran_kegiatan" id="lampiran_kendaraan" class="form-control @error('lampiran_kegiatan', 'tambah_data') is-invalid @enderror" @required(true)>
                                             @error('lampiran_kegiatan', 'tambah_data')
                                                 <div class="text-danger text-start"><small>{{ $errors->tambah_data->first('lampiran_kegiatan') }}</small></div>
                                             @enderror
@@ -149,27 +147,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($data_tim_kegiatan->laporan_kegiatan == null)
+                            @forelse ($data_tim_kegiatan->laporan_kegiatan as $dataLaporanKegiatan)
                                 <tr>
-                                    <td><a>Data Kosong!</a></td>
-                                </tr>
-                            @else
-                                <tr>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->judul_laporan }}</td>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->nama_tim_kegiatan }}</td>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->informasi_kegiatan }}</td>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->lampiran }}</td>
+                                    <td>{{ $dataLaporanKegiatan->judul_laporan }}</td>
+                                    <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
+                                    <td>{{ $dataLaporanKegiatan->informasi_kegiatan }}</td>
+                                    <td>{{ $dataLaporanKegiatan->lampiran }}</td>
                                     <td>
-                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $data_tim_kegiatan->laporan_kegiatan->id }}">Ubah</button> |
-                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $data_tim_kegiatan->laporan_kegiatan->id }}">Hapus</button>
+                                        <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary" >Download</a> |
+                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataLaporanKegiatan->id }}">Ubah</button> |
+                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataLaporanKegiatan->id }}">Hapus</button>
                                     </td>
                                 </tr>
-
                                 {{-- Modal Ubah Data --}}
-                                <form action="{{ route('ketua.edit.laporan_kegiatan', ['LaporanKegiatan' => $data_tim_kegiatan->laporan_kegiatan]) }}" method="POST" enctype="multipart/form-data" class="form-card">
+                                <form action="{{ route('ketua.edit.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" method="POST" enctype="multipart/form-data" class="form-card">
                                     @csrf
                                     @method('PUT')
-                                    <div class="modal fade" id="modalUbahData{{ $data_tim_kegiatan->laporan_kegiatan->id }}" tabindex="-1" aria-labelledby="modalUbahDataLabel" aria-hidden="true">
+                                    <div class="modal fade" id="modalUbahData{{ $dataLaporanKegiatan->id }}" tabindex="-1" aria-labelledby="modalUbahDataLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content container-fluid p-0">
                                                 <div class="modal-header">
@@ -180,27 +174,27 @@
                                                     <div class="row justify-content-between text-left mb-2">
                                                         <div class="col-sm-12 flex-column d-flex">
                                                             <label for="judul_laporan" class="form-label">Judul Laporan<span class="text-danger">*</span></label>
-                                                            <input type="text" id="judul_laporan" name="judul_laporan" @if($errors->hasBag($data_tim_kegiatan->laporan_kegiatan->id)) value="{{ old('judul_laporan') }}" @else value="{{ $data_tim_kegiatan->laporan_kegiatan->judul_laporan }}" @endif min="" max-length="25" class="form-control @error('judul_laporan', $data_tim_kegiatan->laporan_kegiatan->id) is-invalid @enderror" @required(true)>
-                                                            @error('judul_laporan', $data_tim_kegiatan->laporan_kegiatan->id)
-                                                                <div class="text-danger"><small>{{ $errors->{$data_tim_kegiatan->laporan_kegiatan->id}->first('judul_laporan') }}</small></div>
+                                                            <input type="text" name="judul_laporan" id="judul_laporan" max-length="25" @if($errors->hasBag($dataLaporanKegiatan->id)) value="{{ old('judul_laporan') }}" @else value="{{ $dataLaporanKegiatan->judul_laporan }}" @endif class="form-control @error('judul_laporan', $dataLaporanKegiatan->id) is-invalid @enderror" @required(true)>
+                                                            @error('judul_laporan', $dataLaporanKegiatan->id)
+                                                                <div class="text-danger"><small>{{ $errors->{$dataLaporanKegiatan->id}->first('judul_laporan') }}</small></div>
                                                             @enderror
                                                         </div>
                                                     </div>
                                                     <div class="row justify-content-between text-left mb-2">
                                                         <div class="col-sm-12 flex-column d-flex ">
                                                             <label for="informasi_kegiatan" class="form-label">Informasi Kegiatan<span class="text-danger">*</span></label>
-                                                            <input type="text" id="informasi_kegiatan" name="informasi_kegiatan" @if($errors->hasBag($data_tim_kegiatan->laporan_kegiatan->id)) value="{{ old('informasi_kegiatan') }}" @else value="{{ $data_tim_kegiatan->laporan_kegiatan->informasi_kegiatan }}" @endif min="" max-length="25" class="form-control @error('informasi_kegiatan', $data_tim_kegiatan->laporan_kegiatan->id) is-invalid @enderror" placeholder="" @required(true)>
-                                                            @error('informasi_kegiatan', $data_tim_kegiatan->laporan_kegiatan->id)
-                                                                <div class="text-danger"><small>{{ $errors->{$data_tim_kegiatan->laporan_kegiatan->id}->first('informasi_kegiatan') }}</small></div>
+                                                            <textarea name="informasi_kegiatan" id="informasi_kegiatan" max-length="100" class="form-control @error('informasi_kegiatan', $dataLaporanKegiatan->id) is-invalid @enderror" @required(true)>@if($errors->hasBag($dataLaporanKegiatan->id)){{ old('informasi_kegiatan') }}@else{{ $dataLaporanKegiatan->informasi_kegiatan }}@endif</textarea>
+                                                            @error('informasi_kegiatan', $dataLaporanKegiatan->id)
+                                                                <div class="text-danger"><small>{{ $errors->{$dataLaporanKegiatan->id}->first('informasi_kegiatan') }}</small></div>
                                                             @enderror
                                                         </div>
                                                     </div>
                                                     <div class="row justify-content-between text-left mb-2">
                                                         <div class="col-12">
                                                             <label for="lampiran_kegiatan" class="form-label">Lampiran Kegiatan</label>
-                                                            <input class="form-control @error('lampiran_kegiatan', $data_tim_kegiatan->laporan_kegiatan->id) is-invalid @enderror" type="file" name="lampiran_kegiatan" id="lampiran_kegiatan">
-                                                            @error('lampiran_kegiatan', $data_tim_kegiatan->laporan_kegiatan->id)
-                                                                <div class="text-danger text-start"><small>{{ $errors->{$data_tim_kegiatan->laporan_kegiatan->id}->first('lampiran_kegiatan') }}</small></div>
+                                                            <input type="file" name="lampiran_kegiatan" id="lampiran_kegiatan" class="form-control @error('lampiran_kegiatan', $dataLaporanKegiatan->id) is-invalid @enderror">
+                                                            @error('lampiran_kegiatan', $dataLaporanKegiatan->id)
+                                                                <div class="text-danger text-start"><small>{{ $errors->{$dataLaporanKegiatan->id}->first('lampiran_kegiatan') }}</small></div>
                                                             @enderror
                                                         </div>
                                                     </div>            
@@ -212,16 +206,15 @@
                                         </div>
                                         <script>
                                             document.addEventListener('DOMContentLoaded', function () {
-                                                @if ($errors->hasBag($data_tim_kegiatan->laporan_kegiatan->id))
-                                                    $("#modalUbahData{{ $data_tim_kegiatan->laporan_kegiatan->id }}").modal('show');
+                                                @if ($errors->hasBag($dataLaporanKegiatan->id))
+                                                    $("#modalUbahData{{ $dataLaporanKegiatan->id }}").modal('show');
                                                 @endif
                                             });
                                         </script>            
                                     </div>
                                 </form>
-
                                 {{-- Modal Konfirmasi Hapus Data --}}
-                                <div class="modal fade" id="modalHapusData{{ $data_tim_kegiatan->laporan_kegiatan->id }}" tabindex="-1" aria-labelledby="modalHapusDataLabel" aria-hidden="true">
+                                <div class="modal fade" id="modalHapusData{{ $dataLaporanKegiatan->id }}" tabindex="-1" aria-labelledby="modalHapusDataLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -230,10 +223,10 @@
                                             </div>
                                             <div class="modal-body">
                                                 Apakah anda yakin ingin menghapus data ini?<br>
-                                                <b>Judul Laporan : {{ $data_tim_kegiatan->laporan_kegiatan->judul_laporan }}</b>
+                                                <b>Judul Laporan : {{ $dataLaporanKegiatan->judul_laporan }}</b>
                                             </div>
                                             <div class="modal-footer">
-                                                <form action="{{ route('ketua.delete.laporan_kegiatan', ['LaporanKegiatan' => $data_tim_kegiatan->laporan_kegiatan]) }}" method="POST">
+                                                <form action="{{ route('ketua.delete.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Hapus</button>
@@ -243,7 +236,11 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endif
+                            @empty
+                                <tr>
+                                    <td><a>Data Kosong!</a></td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

@@ -92,21 +92,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($data_tim_kegiatan->laporan_kegiatan == null)
+                            @forelse ($data_tim_kegiatan->laporan_kegiatan as $dataLaporanKegiatan)
                                 <tr>
-                                    <td><a>Data Kosong!</a></td>
-                                </tr>
-                            @else
-                                <tr>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->judul_laporan }}</td>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->nama_tim_kegiatan }}</td>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->informasi_kegiatan }}</td>
-                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->lampiran }}</td>
+                                    <td>{{ $dataLaporanKegiatan->judul_laporan }}</td>
+                                    <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
+                                    <td>{{ $dataLaporanKegiatan->informasi_kegiatan }}</td>
+                                    <td>{{ $dataLaporanKegiatan->lampiran }}</td>
                                     <td>
                                         <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $data_tim_kegiatan->laporan_kegiatan->id }}">Ubah</button>
                                     </td>
                                 </tr>
-
                                 {{-- Modal Ubah Data --}}
                                 <form action="{{ route('anggota.edit.laporan_kegiatan', ['LaporanKegiatan' => $data_tim_kegiatan->laporan_kegiatan]) }}" method="POST" enctype="multipart/form-data" class="form-card">
                                     @csrf
@@ -152,7 +147,11 @@
                                         </script>            
                                     </div>
                                 </form>
-                            @endif
+                            @empty
+                                <tr>
+                                    <td><a>Data Kosong!</a></td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
