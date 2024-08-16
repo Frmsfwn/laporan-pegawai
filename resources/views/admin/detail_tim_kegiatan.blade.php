@@ -256,6 +256,7 @@
                                 <th>Nama Tim Kegiatan</th>
                                 <th>Informasi Kegiatan</th>
                                 <th>Lampiran</th>
+                                <th>Opsi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -265,6 +266,9 @@
                                     <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
                                     <td>{{ $dataLaporanKegiatan->informasi_kegiatan }}</td>
                                     <td>{{ $dataLaporanKegiatan->lampiran }}</td>
+                                    <td>
+                                        <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary" >Download</a>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>

@@ -181,7 +181,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row justify-content-between text-left mb-2">
-                                                        <div class="col-sm-12 flex-column d-flex ">
+                                                        <div class="col-sm-12 flex-column d-flex">
                                                             <label for="informasi_kegiatan" class="form-label">Informasi Kegiatan<span class="text-danger">*</span></label>
                                                             <textarea name="informasi_kegiatan" id="informasi_kegiatan" max-length="100" class="form-control @error('informasi_kegiatan', $dataLaporanKegiatan->id) is-invalid @enderror" @required(true)>@if($errors->hasBag($dataLaporanKegiatan->id)){{ old('informasi_kegiatan') }}@else{{ $dataLaporanKegiatan->informasi_kegiatan }}@endif</textarea>
                                                             @error('informasi_kegiatan', $dataLaporanKegiatan->id)
@@ -190,7 +190,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row justify-content-between text-left mb-2">
-                                                        <div class="col-12">
+                                                        <div class="col-sm-12 flex-column d-flex">
                                                             <label for="lampiran_kegiatan" class="form-label">Lampiran Kegiatan</label>
                                                             <input type="file" name="lampiran_kegiatan" id="lampiran_kegiatan" class="form-control @error('lampiran_kegiatan', $dataLaporanKegiatan->id) is-invalid @enderror">
                                                             @error('lampiran_kegiatan', $dataLaporanKegiatan->id)
