@@ -25,7 +25,10 @@
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('admin.homepage') }}">Home</a>
+                  <a class="nav-link" href="{{ route('admin.dashboard') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ route('admin.show.data_tahun_kegiatan') }}">Data Tahun Kegiatan</a>
                 </li>
                 <a class="nav-link" href="{{ route('logout') }}">Logout</a>
               </form>
@@ -45,6 +48,7 @@
                         <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalTambahData">Tambah Data</button>
                     </div>
                 </div>
+
                 {{-- Modal Tambah Data --}}
                 <form action="{{ route('admin.create.data_tim_kegiatan', ['tahun' => request('tahun')]) }}" method="POST" class="form-card">
                     @csrf
@@ -106,6 +110,7 @@
                                         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataTimKegiatan->id }}">Hapus</button>
                                     </td>
                                 </tr>
+
                                 {{-- Modal Ubah Data --}}
                                 <form action="{{ route('admin.edit.data_tim_kegiatan', ['TimKegiatan' => $dataTimKegiatan]) }}" method="POST" class="form-card">
                                     @csrf
@@ -142,6 +147,7 @@
                                         </script>            
                                     </div>
                                 </form>
+
                                 {{-- Modal Konfirmasi Hapus Data --}}
                                 <div class="modal fade" id="modalHapusData{{ $dataTimKegiatan->id }}" tabindex="-1" aria-labelledby="modalHapusDataLabel" aria-hidden="true">
                                     <div class="modal-dialog">

@@ -92,22 +92,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($data_tim_kegiatan->laporan_kegiatan as $dataLaporanKegiatan)
+                            @if($data_tim_kegiatan->laporan_kegiatan == null)
                                 <tr>
-                                    <td>{{ $dataLaporanKegiatan->judul_laporan }}</td>
-                                    <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
-                                    <td>{{ $dataLaporanKegiatan->informasi_kegiatan }}</td>
-                                    <td>{{ $dataLaporanKegiatan->lampiran }}</td>
+                                    <td><a>Data Kosong!</a></td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->judul_laporan }}</td>
+                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->nama_tim_kegiatan }}</td>
+                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->informasi_kegiatan }}</td>
+                                    <td>{{ $data_tim_kegiatan->laporan_kegiatan->lampiran }}</td>
                                     <td>
-                                        <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary" >Download</a> |
-                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataLaporanKegiatan->id }}">Ubah</button>
+                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $data_tim_kegiatan->laporan_kegiatan->id }}">Ubah</button>
                                     </td>
                                 </tr>
+
                                 {{-- Modal Ubah Data --}}
-                                <form action="{{ route('anggota.edit.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" method="POST" enctype="multipart/form-data" class="form-card">
+                                <form action="{{ route('anggota.edit.laporan_kegiatan', ['LaporanKegiatan' => $data_tim_kegiatan->laporan_kegiatan]) }}" method="POST" enctype="multipart/form-data" class="form-card">
                                     @csrf
                                     @method('PUT')
-                                    <div class="modal fade" id="modalUbahData{{ $dataLaporanKegiatan->id }}" tabindex="-1" aria-labelledby="modalUbahDataLabel" aria-hidden="true">
+                                    <div class="modal fade" id="modalUbahData{{ $data_tim_kegiatan->laporan_kegiatan->id }}" tabindex="-1" aria-labelledby="modalUbahDataLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content container-fluid p-0">
                                                 <div class="modal-header">
@@ -118,18 +122,18 @@
                                                     <div class="row justify-content-between text-left mb-2">
                                                         <div class="col-sm-12 flex-column d-flex">
                                                             <label for="judul_laporan" class="form-label">Judul Laporan<span class="text-danger">*</span></label>
-                                                            <input type="text" name="judul_laporan" id="judul_laporan" max-length="25" @if($errors->hasBag($dataLaporanKegiatan->id)) value="{{ old('judul_laporan') }}" @else value="{{ $dataLaporanKegiatan->judul_laporan }}" @endif class="form-control @error('judul_laporan', $dataLaporanKegiatan->id) is-invalid @enderror" @required(true)>
-                                                            @error('judul_laporan', $dataLaporanKegiatan->id)
-                                                                <div class="text-danger"><small>{{ $errors->{$dataLaporanKegiatan->id}->first('judul_laporan') }}</small></div>
+                                                            <input type="text" id="judul_laporan" name="judul_laporan" @if($errors->hasBag($data_tim_kegiatan->laporan_kegiatan->id)) value="{{ old('judul_laporan') }}" @else value="{{ $data_tim_kegiatan->laporan_kegiatan->judul_laporan }}" @endif min="" max-length="25" class="form-control @error('judul_laporan', $data_tim_kegiatan->laporan_kegiatan->id) is-invalid @enderror" @required(true)>
+                                                            @error('judul_laporan', $data_tim_kegiatan->laporan_kegiatan->id)
+                                                                <div class="text-danger"><small>{{ $errors->{$data_tim_kegiatan->laporan_kegiatan->id}->first('judul_laporan') }}</small></div>
                                                             @enderror
                                                         </div>
                                                     </div>
                                                     <div class="row justify-content-between text-left mb-2">
                                                         <div class="col-sm-12 flex-column d-flex ">
                                                             <label for="informasi_kegiatan" class="form-label">Informasi Kegiatan<span class="text-danger">*</span></label>
-                                                            <textarea name="informasi_kegiatan" id="informasi_kegiatan" max-length="100" class="form-control @error('informasi_kegiatan', $dataLaporanKegiatan->id) is-invalid @enderror" @required(true)>@if($errors->hasBag($dataLaporanKegiatan->id)){{ old('informasi_kegiatan') }}@else{{ $dataLaporanKegiatan->informasi_kegiatan }}@endif</textarea>
-                                                            @error('informasi_kegiatan', $dataLaporanKegiatan->id)
-                                                                <div class="text-danger"><small>{{ $errors->{$dataLaporanKegiatan->id}->first('informasi_kegiatan') }}</small></div>
+                                                            <input type="text" id="informasi_kegiatan" name="informasi_kegiatan" @if($errors->hasBag($data_tim_kegiatan->laporan_kegiatan->id)) value="{{ old('informasi_kegiatan') }}" @else value="{{ $data_tim_kegiatan->laporan_kegiatan->informasi_kegiatan }}" @endif min="" max-length="25" class="form-control @error('informasi_kegiatan', $data_tim_kegiatan->laporan_kegiatan->id) is-invalid @enderror" placeholder="" @required(true)>
+                                                            @error('informasi_kegiatan', $data_tim_kegiatan->laporan_kegiatan->id)
+                                                                <div class="text-danger"><small>{{ $errors->{$data_tim_kegiatan->laporan_kegiatan->id}->first('informasi_kegiatan') }}</small></div>
                                                             @enderror
                                                         </div>
                                                     </div>
@@ -141,18 +145,14 @@
                                         </div>
                                         <script>
                                             document.addEventListener('DOMContentLoaded', function () {
-                                                @if ($errors->hasBag($dataLaporanKegiatan->id))
-                                                    $("#modalUbahData{{ $dataLaporanKegiatan->id }}").modal('show');
+                                                @if ($errors->hasBag($data_tim_kegiatan->laporan_kegiatan->id))
+                                                    $("#modalUbahData{{ $data_tim_kegiatan->laporan_kegiatan->id }}").modal('show');
                                                 @endif
                                             });
                                         </script>            
                                     </div>
                                 </form>
-                            @empty
-                                <tr>
-                                    <td><a>Data Kosong!</a></td>
-                                </tr>
-                            @endforelse
+                            @endif
                         </tbody>
                     </table>
                 </div>

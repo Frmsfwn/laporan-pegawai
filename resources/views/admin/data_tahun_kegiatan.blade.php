@@ -25,7 +25,7 @@
           <a class="nav-link disabled" aria-disabled="true">Disabled</a>
         </li>
       </ul>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown nav-link">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           Dropdown
         </a>
@@ -42,21 +42,23 @@
     {{-- Card Table --}}    
     <div class="container-fluid pt-4 px-4">
         <div class="row g-4">
-            <div class="col-12">
+            <div class="col-11 col-sm-7 col-md-8 col-lg-9 col-xl-10 colxxl-11 mx-auto p-2">
                 <div class="bg-light card text-center rounded p-3">
                     <div class="row align-items-center justify-content-between mb-4">
                         <div class="row">
                         <div class="col text-center">
                             <h3 class="mb-0">Data Tahun Kegiatan</h3>
                         </div>
+                        <div class="d-flex">
                         </div>
                         <div class="col-7 col-md-4 col-xxl-2 mt-2">
                             <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalTambahData">Tambah Data</button>
                         </div>
-                        <form class="d-flex col-7 col-md-4 col-xxl-auto mt-2" role="search">
-                            <input class="form-control w-auto" type="search" placeholder="Search" aria-label="Search">
+                        <form class="d-flex col-7 col-md-4 col-xxl-2 mt-2" role="search">
+                            <input class="form-control w-100" type="search" placeholder="Search" aria-label="Search">
                             <button class="btn btn-outline-success" type="submit">Search</button>
                         </form>
+                    </div>
                     </div>
                     <div class="table-responsive">
                         {{-- Modal Tambah Data --}}
@@ -72,7 +74,7 @@
                                         <div class="modal-body">
                                             <div class="row justify-content-between text-left mb-2">
                                                 <div class="col-sm-12 flex-column d-flex">
-                                                    <label for="tahun_kegiatan" class="form-label">Tahun Kegiatan<span class="text-danger">*</span></label>
+                                                    <strong class="text-start"><label for="tahun_kegiatan" class="form-label">Tahun Kegiatan<span class="text-danger">*</span></label></strong>
                                                     <input type="number" id="tahun_kegiatan" name="tahun_kegiatan" @if($errors->hasBag('tambah_data')) value="{{ old('tahun_kegiatan') }}" @endif min="1901" max="2099" step="1" value="{{ date("Y") }}" class="form-control @error('tahun_kegiatan', 'tambah_data') is-invalid @enderror" @required(true)>
                                                     @error('tahun_kegiatan', 'tambah_data')
                                                         <div class="text-danger"><small>{{ $errors->tambah_data->first('tahun_kegiatan') }}</small></div>
@@ -81,7 +83,7 @@
                                             </div>
                                             <div class="row justify-content-between text-left mb-2">
                                                 <div class="col-sm-12 flex-column d-flex ">
-                                                    <label for="nama_kegiatan" class="form-label">Nama Kegiatan<span class="text-danger">*</span></label>
+                                                    <strong class="text-start"><label for="nama_kegiatan" class="form-label">Nama Kegiatan<span class="text-danger">*</span></label></strong>
                                                     <input type="text" id="nama_kegiatan" name="nama_kegiatan" @if($errors->hasBag('tambah_data')) value="{{ old('nama_kegiatan') }}" @endif min="" max-length="50" class="form-control @error('nama_kegiatan', 'tambah_data') is-invalid @enderror" @required(true)>
                                                     @error('nama_kegiatan', 'tambah_data')
                                                         <div class="text-danger"><small>{{ $errors->tambah_data->first('nama_kegiatan') }}</small></div>
@@ -139,7 +141,7 @@
                                                         <div class="modal-body">
                                                             <div class="row justify-content-between text-left mb-2">
                                                                 <div class="col-sm-12 flex-column d-flex">
-                                                                    <label for="tahun_kegiatan" class="form-label">Tahun Kegiatan<span class="text-danger">*</span></label>
+                                                                    <strong class="text-start"><label for="tahun_kegiatan" class="form-label">Tahun Kegiatan<span class="text-danger">*</span></label></strong>
                                                                     <input type="number" id="tahun_kegiatan" name="tahun_kegiatan" @if($errors->hasBag($dataTahunKegiatan->id)) value="{{ old('tahun_kegiatan') }}" @else value="{{ $dataTahunKegiatan->tahun }}" @endif min="1901" max="2099" step="1" class="form-control @error('tahun_kegiatan', $dataTahunKegiatan->id) is-invalid @enderror" @required(true)>
                                                                     @error('tahun_kegiatan', $dataTahunKegiatan->id)
                                                                         <div class="text-danger"><small>{{ $errors->{$dataTahunKegiatan->id}->first('tahun_kegiatan') }}</small></div>
@@ -148,7 +150,7 @@
                                                             </div>
                                                             <div class="row justify-content-between text-left mb-2">
                                                                 <div class="col-sm-12 flex-column d-flex ">
-                                                                    <label for="nama_kegiatan" class="form-label">Nama Kegiatan<span class="text-danger">*</span></label>
+                                                                    <strong class="text-start"><label for="nama_kegiatan" class="form-label">Nama Kegiatan<span class="text-danger">*</span></label></strong>
                                                                     <input type="text" id="nama_kegiatan" name="nama_kegiatan" @if($errors->hasBag($dataTahunKegiatan->id)) value="{{ old('nama_kegiatan') }}" @else value="{{ $dataTahunKegiatan->nama }}" @endif min="" max-length="50" class="form-control @error('nama_kegiatan', $dataTahunKegiatan->id) is-invalid @enderror" placeholder="" @required(true)>
                                                                     @error('nama_kegiatan', $dataTahunKegiatan->id)
                                                                         <div class="text-danger"><small>{{ $errors->{$dataTahunKegiatan->id}->first('nama_kegiatan') }}</small></div>
