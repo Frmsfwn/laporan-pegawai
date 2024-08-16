@@ -11,31 +11,33 @@
 
 </head>
 <body>
-    <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <h1 class="text-center">Data Tahun Kegiatan</h1><br>
-          <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header align-content-center">
-              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Tahun Kegiatan</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('admin.dashboard') }}">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{{ route('admin.show.data_tahun_kegiatan') }}">Data Tahun Kegiatan</a>
-                </li>
-                <a class="nav-link" href="{{ route('logout') }}">Logout</a>
-              </form>
-            </div>
-          </div>
-        </div>
-    </nav>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ route('admin.show.data_tahun_kegiatan') }}">Data Tahun Kegiatan</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Dropdown
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+        </ul>
+      </li>
+    </div>
+  </div>
+</nav>
 
     {{-- Card Table --}}    
     <div class="container-fluid pt-4 px-4">
@@ -43,12 +45,18 @@
             <div class="col-12">
                 <div class="bg-light card text-center rounded p-3">
                     <div class="row align-items-center justify-content-between mb-4">
-                        <div class="col-12 col-md-8 col-xxl-10">
+                        <div class="row">
+                        <div class="col text-center">
                             <h3 class="mb-0">Data Tahun Kegiatan</h3>
+                        </div>
                         </div>
                         <div class="col-7 col-md-4 col-xxl-2 mt-2">
                             <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalTambahData">Tambah Data</button>
                         </div>
+                        <form class="d-flex col-7 col-md-4 col-xxl-auto mt-2" role="search">
+                            <input class="form-control w-auto" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
                     </div>
                     <div class="table-responsive">
                         {{-- Modal Tambah Data --}}
