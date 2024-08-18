@@ -15,14 +15,30 @@ use Illuminate\Validation\Rule;
 
 class TimKegiatanController extends Controller
 {
-    function showDataTim()
+    function showDataTim(Request $request)
     {
         if(Auth::user()->role === 'Admin') {
 
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
             $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan;
+
+            $keyword = $request->input('keyword');
+            if ($keyword) {
+                $data_tim_kegiatan = collect($data_tim_kegiatan)->filter(function ($item) use ($keyword) {
+                    return false !== stristr($item->nama, $keyword);
+                });
+                $data_tim_kegiatan
+                    ->sortByDesc('updated_at')
+                    ->sortByDesc('created_at');
+
+                return view('admin.data_tim_kegiatan')
+                    ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                    ->with('keyword',$keyword);    
+            }    
+
             return view('admin.data_tim_kegiatan')
-                ->with('data_tim_kegiatan',$data_tim_kegiatan);
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('keyword',$keyword);
 
         }elseif(Auth::user()->role === 'Ketua') {
             
@@ -125,14 +141,36 @@ class TimKegiatanController extends Controller
         return redirect(route('admin.show.data_tim_kegiatan', ['tahun' => $TimKegiatan->tahun_kegiatan->tahun]));
     }
 
-    function showDetailTim()
+    function showDetailTim(Request $request)
     {
         if(Auth::user()->role === 'Admin') {
 
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
             $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
+
+            $keyword = $request->input('keyword');
+            if ($keyword) {
+                $data_tim_kegiatan = collect($data_tim_kegiatan->anggota_tim->user)->filter(function ($item) use ($keyword) {
+                    $data = collect([
+                        $item->nip,
+                        $item->nama,
+                        $item->username,
+                        $item->role,
+                    ]);
+                    return false !== stristr($data, $keyword);
+                });
+                $data_tim_kegiatan
+                    ->sortByDesc('updated_at')
+                    ->sortByDesc('created_at');
+
+                return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
+                    ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                    ->with('keyword',$keyword);    
+            }    
+
             return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
-                ->with('data_tim_kegiatan',$data_tim_kegiatan);
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('keyword',$keyword);
         
         }elseif(Auth::user()->role === 'Ketua') {
             

@@ -31,7 +31,7 @@ class TahunKegiatan extends Model
 
     public function tim_kegiatan(): HasMany
     {
-        return $this->hasMany(TimKegiatan::class, 'id_tahun_kegiatan', 'id')->orderBy('updated_at','desc');
+        return $this->hasMany(TimKegiatan::class, 'id_tahun_kegiatan', 'id');
     }
 
     public function laporan_kegiatan(): HasMany

@@ -29,17 +29,17 @@
         <h3 class="fw-semibold fs-1 pb-2 text-black align-self-center text-center">Laporan Pegawai</h3>
             <i class="fa-solid fa-arrow-right-long icon pt-xl-2 pt-md-2" style="font-size: 35px"></i>
             <div class="form-floating mb-4" >
-                <input type="text" name="username" maxlength="15" @required(true) value="{{ @old('username') }}" id="username" class="form-control form-control-lg border-2 border-warning @error('username') is-invalid @enderror" placeholder="" autocomplete="off" >
-                <label class="form-label" for="username"><i class="fa-solid fa-user"></i> Username</label>
-                @error('username')
-                    <div class="text-danger"><small>{{ $message }}</small></div>
+                <input type="text" name="username" id="username" @if($errors->hasBag('login')) value="{{ old('username') }}" @endif maxlength="15" autocomplete="off" class="form-control form-control-lg border-2 border-warning @error('username', 'login') is-invalid @enderror" @required(true)>
+                <label class="form-label" for="username">Username</label>
+                @error('username', 'login')
+                    <div class="text-danger"><small>{{ $errors->login->first('username') }}</small></div>
                 @enderror
             </div>
             <div class="form-floating mb-4">
-                <input type="password" name="password" maxlength="50" @required(true) value="{{ @old('password') }}" id="password" class="form-control form-control-lg border-2 border-warning @error('password') is-invalid @enderror" placeholder="" autocomplete="off" >
-                <label class="form-label " for="password"><i class="fa-solid fa-key"></i> Password</label>
-                @error('password')
-                    <div class="text-danger"><small>{{ $message }}</small></div>
+                <input type="password" name="password" id="password" maxlength="50" autocomplete="off" autocomplete="off" class="form-control form-control-lg border-2 border-warning @error('password', 'login') is-invalid @enderror" @required(true)>
+                <label class="form-label" for="password">Password</label>
+                @error('password', 'login')
+                    <div class="text-danger"><small>{{ $errors->login->first('password') }}</small></div>
                 @enderror
             </div>
         <div class="pt-1 mb-5">

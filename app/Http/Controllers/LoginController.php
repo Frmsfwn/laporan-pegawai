@@ -19,17 +19,15 @@ class LoginController extends Controller
     {
         $messages = [
             'username.required' => 'Username tidak dapat kosong.',
-            'username.max' => 'Kolom username maksimal berisi 15 karakter.',
-            'username.alpha_dash' => 'Kolom username tidak valid.',
-            'username.lowercase' => 'Kolom username hanya dapat berisi huruf kecil.',
-            'password.required' => 'Kolom password tidak dapat kosong.',
-            'password.max' => 'Kolom password maksimal berisi 50 karakter.',
+            'username.max' => 'Username maksimal berisi 15 karakter.',
+            'password.required' => 'Password tidak dapat kosong.',
+            'password.max' => 'Password maksimal berisi 50 karakter.',
         ];
 
         Validator::make($request->input(), [
-            'username' => 'required|max:15|alpha_dash:ascii|lowercase',
+            'username' => 'required|max:15',
             'password' => 'required|max:50', 
-        ],$messages)->validate();
+        ],$messages)->validateWithBag('login');
 
         $inputeddata = [
             'username' => $request->input('username'),
@@ -89,17 +87,62 @@ class LoginController extends Controller
                 ->withErrors([
                     'username' => 'Username atau Password tidak sesuai.',
                     'password' => 'Username atau Password tidak sesuai.',
-                ])->withInput();
+                ],'login')
+                ->onlyInput('username');
         }
     }
 
-    function Homepage()
+    function editPassword()
+    {
+        return view('main.ubah_password');
+    }
+
+    function updatePassword(User $User, Request $request)
+    {
+        $messages = [
+            'password_lama.required' => 'Kolom password tidak dapat kosong.',
+            'password_lama.max' => 'Kolom password maksimal berisi 50 karakter.',
+            'password_lama.current_password' => 'Password tidak sesuai',
+            'password_baru.required' => 'Kolom password tidak dapat kosong.',
+            'password_baru.max' => 'Kolom password maksimal berisi 50 karakter.',
+            'konfirmasi_password.required' => 'Kolom password tidak dapat kosong.',
+            'konfirmasi_password.max' => 'Kolom password maksimal berisi 50 karakter.',
+            'konfirmasi_password.same' => 'Password tidak sesuai',
+        ];
+
+        Validator::make($request->input(), [
+            'password_lama' => 'required|max:50|current_password:web',
+            'password_baru' => 'required|max:50',
+            'konfirmasi_password' => 'required|max:50|same:password_baru',
+        ],$messages)->validateWithBag('ubah_password');
+
+        $User->update([ 'password' => bcrypt($request->input('konfirmasi_password')) ]);
+
+        Auth::logout();
+        return redirect(route('login'));
+    }
+
+    function Homepage(Request $request)
     {
         if(Auth::user()->role === 'Admin') {
 
             $data_tahun_kegiatan = TahunKegiatan::orderBy('updated_at','desc')->get();
+
+            $keyword = $request->input('keyword');
+            if ($keyword) {
+                $data_tahun_kegiatan = 
+                TahunKegiatan::whereAny([
+                    'tahun',
+                    'nama',
+                ],'LIKE',"%$keyword%")
+                    ->orderBy('updated_at', 'DESC')
+                    ->orderBy('created_at', 'DESC')
+                    ->get();
+            }    
+
             return view('admin.homepage')
-                ->with('data_tahun_kegiatan',$data_tahun_kegiatan);
+                ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
+                ->with('keyword',$keyword);
 
         }elseif(Auth::user()->role === 'Manajemen') {
 
