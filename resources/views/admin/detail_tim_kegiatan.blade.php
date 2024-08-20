@@ -108,8 +108,12 @@
                                             <div class="col-sm-12 flex-column d-flex">
                                                 <strong class="text-start"><label for="role_anggota" class="form-label">Role<span class="text-danger">*</span></label></strong>
                                                 <select id="role_anggota" name="role_anggota" class="form-select @error('role_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
-                                                    <option value="Anggota" default selected>Anggota</option>
-                                                    <option value="Ketua" >Ketua</option>
+                                                    @if($data_admin_tim->isNotEmpty())
+                                                        <option value="Anggota" default selected>Anggota</option>
+                                                    @else
+                                                        <option value="Anggota" default selected>Anggota</option>
+                                                        <option value="Ketua" >Ketua</option>
+                                                    @endif
                                                 </select>
                                                 @error('role_anggota', 'tambah_data')
                                                     <div class="text-danger text-start"><small>{{ $message }}</small></div>
@@ -144,7 +148,7 @@
                             </thead>
                             <tbody>
                                 @forelse($data_tim_kegiatan->anggota_tim as $dataAnggotaTim)
-                                    @foreach($dataAnggotaTim->user as $dataAnggota)
+                                    @foreach($dataAnggotaTim->user->sortByDesc('updated_at') as $dataAnggota)
                                         <tr>
                                             <td>{{ $dataAnggota->nip }}</td>
                                             <td>{{ $dataAnggota->nama }}</td>
@@ -204,8 +208,12 @@
                                                                         @else
                                                                             <option value="{{ $dataAnggota->role }}" selected hidden>{{ $dataAnggota->role }}</option>
                                                                         @endif
-                                                                        <option value="Anggota">Anggota</option>
-                                                                        <option value="Ketua" >Ketua</option>
+                                                                        @if($data_admin_tim->isNotEmpty())
+                                                                            <option value="Anggota">Anggota</option>
+                                                                        @else
+                                                                            <option value="Anggota">Anggota</option>
+                                                                            <option value="Ketua" >Ketua</option>
+                                                                        @endif
                                                                     </select>
                                                                     @error('role_anggota', $dataAnggota->id)
                                                                         <div class="text-danger text-start"><small>{{ $message }}</small></div>
@@ -277,6 +285,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th>Status Laporan</th>
                                     <th>Judul Laporan</th>
                                     <th>Nama Tim Kegiatan</th>
                                     <th>Informasi Kegiatan</th>
@@ -287,6 +296,7 @@
                             <tbody>
                                 @forelse ($data_tim_kegiatan->laporan_kegiatan as $dataLaporanKegiatan)
                                     <tr>
+                                        <td>{{ $dataLaporanKegiatan->status_laporan }}</td>                                        
                                         <td>{{ $dataLaporanKegiatan->judul_laporan }}</td>
                                         <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
                                         <td>{{ $dataLaporanKegiatan->informasi_kegiatan }}</td>

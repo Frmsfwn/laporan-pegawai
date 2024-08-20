@@ -23,6 +23,7 @@ class LaporanKegiatan extends Model
         'id',
         'id_tim_kegiatan',
         'id_tahun_kegiatan',
+        'status_laporan',
         'judul_laporan',
         'nama_tim_kegiatan',
         'informasi_kegiatan',

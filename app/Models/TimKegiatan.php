@@ -20,6 +20,7 @@ class TimKegiatan extends Model
 
     protected $fillable = [
         'id',
+        'status_laporan',
         'nama',
         'id_tahun_kegiatan',
         'id_ketua',

@@ -48,7 +48,7 @@
                     <div class="row align-items-center justify-content-between mb-4">
                         <div class="row">
                             <div class="col text-center">
-                                <h3 class="mb-0">Data Tahun Kegiatan</h3>
+                                <h3 class="mb-0">Data Tim Kegiatan</h3>
                             </div>
                             <div class="d-flex">
                                 

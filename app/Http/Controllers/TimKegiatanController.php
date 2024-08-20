@@ -7,6 +7,7 @@ use App\Models\LaporanKegiatan;
 use App\Models\TahunKegiatan;
 use App\Models\TimKegiatan;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -146,6 +147,11 @@ class TimKegiatanController extends Controller
 
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
             $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
+            $data_admin_tim = 
+                AnggotaTim::where('id_tim_kegiatan',$data_tim_kegiatan->id)
+                    ->whereHas('user', function (Builder $query) {
+                        $query->where('role', '=', 'Ketua');
+                    })->get();
 
             $keyword = $request->input('keyword');
             if ($keyword) {
@@ -164,12 +170,14 @@ class TimKegiatanController extends Controller
 
                 return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
                     ->with('data_tim_kegiatan',$data_tim_kegiatan)
-                    ->with('keyword',$keyword);    
+                    ->with('keyword',$keyword)
+                    ->with('data_admin_tim',$data_admin_tim);    
             }    
 
             return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
                 ->with('data_tim_kegiatan',$data_tim_kegiatan)
-                ->with('keyword',$keyword);
+                ->with('keyword',$keyword)
+                ->with('data_admin_tim',$data_admin_tim);
         
         }elseif(Auth::user()->role === 'Ketua') {
             
