@@ -10,7 +10,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     {{-- JQuery --}}
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha506-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 
     {{-- FontAwesome --}}
     <script src="https://kit.fontawesome.com/e814145206.js" crossorigin="anonymous"></script>
@@ -113,7 +113,7 @@
                                         <div class="row justify-content-between text-left mb-2">
                                             <div class="col-sm-12 flex-column d-flex">
                                                 <strong class="text-start"><label for="judul_laporan" class="form-label">Judul Laporan<span class="text-danger">*</span></label></strong>
-                                                <input type="text" name="judul_laporan" id="judul_laporan" maxlength="25" @if($errors->hasBag('tambah_data')) value="{{ old('judul_laporan') }}" @endif  class="form-control @error('judul_laporan', 'tambah_data') is-invalid @enderror" @required(true)>
+                                                <input type="text" name="judul_laporan" id="judul_laporan" maxlength="50" @if($errors->hasBag('tambah_data')) value="{{ old('judul_laporan') }}" @endif  class="form-control @error('judul_laporan', 'tambah_data') is-invalid @enderror" @required(true)>
                                                 @error('judul_laporan', 'tambah_data')
                                                     <div class="text-danger"><small>{{ $errors->tambah_data->first('judul_laporan') }}</small></div>
                                                 @enderror
@@ -191,7 +191,7 @@
                                                         <div class="row justify-content-between text-left mb-2">
                                                             <div class="col-sm-12 flex-column d-flex">
                                                                 <strong class="text-start"><label for="judul_laporan" class="form-label">Judul Laporan<span class="text-danger">*</span></label></strong>
-                                                                <input type="text" name="judul_laporan" id="judul_laporan" maxlength="25" @if($errors->hasBag($dataLaporanKegiatan->id)) value="{{ old('judul_laporan') }}" @else value="{{ $dataLaporanKegiatan->judul_laporan }}" @endif class="form-control @error('judul_laporan', $dataLaporanKegiatan->id) is-invalid @enderror" @required(true)>
+                                                                <input type="text" name="judul_laporan" id="judul_laporan" maxlength="50" @if($errors->hasBag($dataLaporanKegiatan->id)) value="{{ old('judul_laporan') }}" @else value="{{ $dataLaporanKegiatan->judul_laporan }}" @endif class="form-control @error('judul_laporan', $dataLaporanKegiatan->id) is-invalid @enderror" @required(true)>
                                                                 @error('judul_laporan', $dataLaporanKegiatan->id)
                                                                     <div class="text-danger"><small>{{ $errors->{$dataLaporanKegiatan->id}->first('judul_laporan') }}</small></div>
                                                                 @enderror

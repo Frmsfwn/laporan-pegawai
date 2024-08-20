@@ -20,7 +20,7 @@ class TimKegiatanController extends Controller
         if(Auth::user()->role === 'Admin') {
 
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan;
+            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->sortByDesc('updated_at');
 
             $keyword = $request->input('keyword');
             if ($keyword) {
@@ -28,8 +28,7 @@ class TimKegiatanController extends Controller
                     return false !== stristr($item->nama, $keyword);
                 });
                 $data_tim_kegiatan
-                    ->sortByDesc('updated_at')
-                    ->sortByDesc('created_at');
+                    ->sortByDesc('updated_at');
 
                 return view('admin.data_tim_kegiatan')
                     ->with('data_tim_kegiatan',$data_tim_kegiatan)
@@ -43,14 +42,14 @@ class TimKegiatanController extends Controller
         }elseif(Auth::user()->role === 'Ketua') {
             
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan;
+            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->sortByDesc('updated_at');
             return view('ketua.data_tim_kegiatan')
                 ->with('data_tim_kegiatan',$data_tim_kegiatan);
 
         }elseif(Auth::user()->role === 'Anggota') {
             
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan;
+            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->sortByDesc('updated_at');
             return view('anggota.data_tim_kegiatan')
                 ->with('data_tim_kegiatan',$data_tim_kegiatan);
 
@@ -317,7 +316,7 @@ class TimKegiatanController extends Controller
     {
         $messages = [
             'judul_laporan.required' => 'Judul laporan tidak dapat kosong.',
-            'judul_laporan.max' => 'Judul laporan maksimal 25 karakter.',
+            'judul_laporan.max' => 'Judul laporan maksimal 50 karakter.',
             'judul_laporan.unique' => 'Judul laporan telah ditambahkan pada database.',
             'informasi_kegiatan.required' => 'Informasi kegiatan tidak dapat kosong.',
             'informasi_kegiatan.max' => 'Informasi kegiatan maksimal 100 karakter.',
@@ -334,7 +333,7 @@ class TimKegiatanController extends Controller
         ->error('<b>Error!</b><br>Data laporan kegiatan gagal ditambahkan.');
 
         Validator::make($request->all(), [
-            'judul_laporan' => 'required|max:25|unique:laporan_kegiatan,judul_laporan',
+            'judul_laporan' => 'required|max:50|unique:laporan_kegiatan,judul_laporan',
             'informasi_kegiatan' => 'required|max:100',
             'lampiran_kegiatan' => 'required|file|max:102400|mimes:doc,docx,ppt,pptx,xls,xlsx,odt,odf,ods,odp,xml,pdf,one,rtf,txt,csv,html,htm,rar,zip,7zip,jpg,jpeg,png,heif,heic|extensions:doc,docx,ppt,pptx,xls,xlsx,odt,odf,ods,odp,xml,pdf,one,rtf,txt,csv,html,htm,rar,zip,7zip,jpg,jpeg,png,heif,heic',
         ],$messages)->validateWithBag('tambah_data');
@@ -368,7 +367,7 @@ class TimKegiatanController extends Controller
     {
         $messages = [
             'judul_laporan.required' => 'Judul laporan tidak dapat kosong.',
-            'judul_laporan.max' => 'Judul laporan maksimal 25 karakter.',
+            'judul_laporan.max' => 'Judul laporan maksimal 50 karakter.',
             'judul_laporan.unique' => 'Judul laporan telah ditambahkan pada database.',
             'informasi_kegiatan.required' => 'Informasi kegiatan tidak dapat kosong.',
             'informasi_kegiatan.max' => 'Informasi kegiatan maksimal 100 karakter.',
@@ -384,7 +383,7 @@ class TimKegiatanController extends Controller
         ->error('<b>Error!</b><br>Data laporan kegiatan gagal diubah.');
 
         Validator::make($request->all(), [
-            'judul_laporan' => ['required','max:25',Rule::unique('laporan_kegiatan','judul_laporan')->ignore($LaporanKegiatan->id)],
+            'judul_laporan' => ['required','max:50',Rule::unique('laporan_kegiatan','judul_laporan')->ignore($LaporanKegiatan->id)],
             'informasi_kegiatan' => 'required|max:100',
             'lampiran_kegiatan' => 'file|max:102400|mimes:doc,docx,ppt,pptx,xls,xlsx,odt,odf,ods,odp,xml,pdf,one,rtf,txt,csv,html,htm,rar,zip,7zip,jpg,jpeg,png,heif,heic|extensions:doc,docx,ppt,pptx,xls,xlsx,odt,odf,ods,odp,xml,pdf,one,rtf,txt,csv,html,htm,rar,zip,7zip,jpg,jpeg,png,heif,heic',
         ],$messages)->validateWithBag($LaporanKegiatan->id);

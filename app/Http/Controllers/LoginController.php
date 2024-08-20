@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LaporanKegiatan;
 use App\Models\TahunKegiatan;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -126,7 +127,10 @@ class LoginController extends Controller
     {
         if(Auth::user()->role === 'Admin') {
 
-            $data_tahun_kegiatan = TahunKegiatan::orderBy('updated_at','desc')->get();
+            $data_tahun_kegiatan = 
+            TahunKegiatan::orderBy('updated_at','desc')
+                ->orderBy('created_at','desc')    
+                ->get();
 
             $keyword = $request->input('keyword');
             if ($keyword) {
@@ -146,7 +150,13 @@ class LoginController extends Controller
 
         }elseif(Auth::user()->role === 'Manajemen') {
 
-            return view('manajemen.homepage');
+            $data_laporan_kegiatan = 
+            LaporanKegiatan::orderBy('updated_at','desc')
+                ->orderBy('created_at','desc')
+                ->get();
+
+            return view('manajemen.homepage')
+                ->with('data_laporan_kegiatan',$data_laporan_kegiatan);
 
         }elseif(Auth::user()->role === 'Ketua') {
 
