@@ -143,7 +143,7 @@
                                     <th>Nama</th>
                                     <th>Username</th>
                                     <th>Role</th>
-                                    <th>Opsi</th>
+                                    <th colspan="2">Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -155,7 +155,9 @@
                                             <td>{{ $dataAnggota->username }}</td>
                                             <td>{{ $dataAnggota->role }}</td>
                                             <td>
-                                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataAnggota->id }}">Ubah</button> |
+                                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataAnggota->id }}">Ubah</button>
+                                            </td>
+                                            <td>
                                                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataAnggota->id }}">Hapus</button>
                                             </td>
                                         </tr>

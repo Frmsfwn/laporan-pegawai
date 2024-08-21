@@ -109,7 +109,7 @@
                                 <tr>
                                     <th scope="col">Tahun</th>
                                     <th scope="col">Nama Kegiatan</th>
-                                    <th scope="col">Opsi</th>
+                                    <th scope="col" colspan="3">Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -118,10 +118,14 @@
                                         <td>{{ $dataTahunKegiatan->tahun }}</td>
                                         <td>{{ $dataTahunKegiatan->nama }}</td>
                                         <td>
-                                            <a href="{{ route('admin.show.data_tim_kegiatan', ['tahun' => $dataTahunKegiatan->tahun]) }}" class="btn btn-primary">Detail</a> |
-                                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataTahunKegiatan->id }}">Ubah</button> |
-                                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataTahunKegiatan->id }}">Hapus</button>
+                                            <a href="{{ route('admin.show.data_tim_kegiatan', ['tahun' => $dataTahunKegiatan->tahun]) }}" class="btn btn-primary">Detail</a>
                                         </td>
+                                        <td>
+                                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataTahunKegiatan->id }}">Ubah</button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataTahunKegiatan->id }}">Hapus</button>
+                                        </td> 
                                     </tr>
                                     {{-- Modal Ubah Data --}}
                                     <form action="{{ route('admin.edit.data_tahun_kegiatan', ['TahunKegiatan' => $dataTahunKegiatan]) }}" method="POST" class="form-card">
