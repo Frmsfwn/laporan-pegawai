@@ -36,8 +36,8 @@ Route::group(['middleware' => 'preventBackHistory'], function(){
         });
         Route::prefix('manajemen')->name('manajemen.')->middleware(['userAccess:Manajemen'])->group(function() {
             route::get('/homepage', [LoginController::class, 'Homepage'])->name('homepage');
-            route::post('/data/laporan_kegiatan/accept', [TimKegiatanController::class, 'acceptLaporan'])->name('accept.laporan_kegiatan');
-            route::post('/data/laporan_kegiatan/decline', [TimKegiatanController::class, 'declineLaporan'])->name('decline.laporan_kegiatan');
+            route::post('/data/laporan_kegiatan/{LaporanKegiatan}/accept', [TimKegiatanController::class, 'acceptLaporan'])->name('accept.laporan_kegiatan');
+            route::post('/data/laporan_kegiatan/{LaporanKegiatan}/decline', [TimKegiatanController::class, 'declineLaporan'])->name('decline.laporan_kegiatan');
         });    
         Route::prefix('ketua')->name('ketua.')->middleware(['userAccess:Ketua'])->group(function() {
             route::get('/homepage', [LoginController::class, 'Homepage'])->name('homepage');

@@ -45,7 +45,7 @@
                     <div class="row align-items-center justify-content-between mb-4">
                         <div class="row">
                             <div class="col text-center">
-                                <h3 class="mb-0">Data Laporan Kegiatan</h3>
+                                <h3 class="mb-0">Data Laporan Kegiatan Terbaru</h3>
                             </div>
                             <div class="d-flex">
                                 
@@ -71,25 +71,32 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($data_laporan_kegiatan as $dataLaporanKegiatan)
+                                @forelse($data_laporan_kegiatan_terbaru as $dataLaporanKegiatanTerbaru)
                                     <tr class="align-middle">
-                                        <td>Diterima</td>
-                                        <td>{{ $dataLaporanKegiatan->tahun_kegiatan->tahun }}</td>
-                                        <td>{{ $dataLaporanKegiatan->tahun_kegiatan->nama }}</td>
-                                        <td>{{ $dataLaporanKegiatan->judul_laporan }}</td>
-                                        <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
-                                        <td><textarea disabled>{{ $dataLaporanKegiatan->informasi_kegiatan }}</textarea></td>
-                                        <td>{{ $dataLaporanKegiatan->lampiran }}</td>
+                                        @if($dataLaporanKegiatanTerbaru->status_laporan == null)
+                                            <td>-</td>
+                                        @else
+                                            <td>{{ $dataLaporanKegiatanTerbaru->status_laporan }}</td>
+                                        @endif
+                                        <td>{{ $dataLaporanKegiatanTerbaru->tahun_kegiatan->tahun }}</td>
+                                        <td>{{ $dataLaporanKegiatanTerbaru->tahun_kegiatan->nama }}</td>
+                                        <td>{{ $dataLaporanKegiatanTerbaru->judul_laporan }}</td>
+                                        <td>{{ $dataLaporanKegiatanTerbaru->nama_tim_kegiatan }}</td>
+                                        <td><textarea disabled>{{ $dataLaporanKegiatanTerbaru->informasi_kegiatan }}</textarea></td>
+                                        <td>{{ $dataLaporanKegiatanTerbaru->lampiran }}</td>
                                         <td>
-                                            <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary" >Download</a>
-                                            <a href="" class="btn btn-success">Terima</a>
-                                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalTolakLaporan{{ $dataLaporanKegiatan->id }}">Tolak</button>
+                                            <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatanTerbaru]) }}" class="btn btn-primary" >Unduh</a>
+                                            <form action="{{ route('manajemen.accept.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatanTerbaru]) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success">Terima</button>
+                                            </form>
+                                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalTolakLaporan{{ $dataLaporanKegiatanTerbaru->id }}">Tolak</button>
                                         </td>
                                     </tr>
                                     {{-- Modal Tambah Data --}}
-                                    <form action="{{ route('manajemen.decline.laporan_kegiatan') }}" method="POST" class="form-card">
+                                    <form action="{{ route('manajemen.decline.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatanTerbaru]) }}" method="POST" class="form-card">
                                         @csrf
-                                        <div class="modal fade" id="modalTolakLaporan{{ $dataLaporanKegiatan->id }}" tabindex="-1" aria-labelledby="modalTolakLaporanLabel" aria-hidden="true">
+                                        <div class="modal fade" id="modalTolakLaporan{{ $dataLaporanKegiatanTerbaru->id }}" tabindex="-1" aria-labelledby="modalTolakLaporanLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content container-fluid p-0 container-md">
                                                     <div class="modal-header">
@@ -98,13 +105,13 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         Apakah anda yakin ingin menolak laporan kegiatan ini?<br>
-                                                        <b>Judul Laporan : {{ $dataLaporanKegiatan->judul_laporan }} | Tim Kegiatan : {{ $dataLaporanKegiatan->nama_tim_kegiatan }}</b>
-                                                        <div class="row justify-content-between text-left mb-2">
+                                                        <b>Judul Laporan : {{ $dataLaporanKegiatanTerbaru->judul_laporan }} | Tim Kegiatan : {{ $dataLaporanKegiatanTerbaru->nama_tim_kegiatan }}</b>
+                                                        <div class="row justify-content-between text-left mb-2 mt-3">
                                                             <div class="col-sm-12 flex-column d-flex ">
                                                                 <strong class="text-start"><label for="alasan" class="form-label">Alasan<span class="text-danger">*</span></label></strong>
-                                                                <textarea id="alasan" name="alasan" maxlength="100" class="form-control @error('alasan', $dataLaporanKegiatan->id) is-invalid @enderror" @required(true)>@if($errors->hasBag($dataLaporanKegiatan->id)){{ old('alasan') }}@endif</textarea>
-                                                                @error('alasan', $dataLaporanKegiatan->id)
-                                                                    <div class="text-danger"><small>{{ $errors->{$dataLaporanKegiatan->id}->first('alasan') }}</small></div>
+                                                                <textarea id="alasan" name="alasan" maxlength="100" class="form-control @error('alasan', $dataLaporanKegiatanTerbaru->id) is-invalid @enderror" @required(true)>@if($errors->hasBag($dataLaporanKegiatanTerbaru->id)){{ old('alasan') }}@endif</textarea>
+                                                                @error('alasan', $dataLaporanKegiatanTerbaru->id)
+                                                                    <div class="text-danger"><small>{{ $errors->{$dataLaporanKegiatanTerbaru->id}->first('alasan') }}</small></div>
                                                                 @enderror
                                                             </div>
                                                         </div>
@@ -117,13 +124,137 @@
                                             </div>
                                             <script>
                                                 document.addEventListener('DOMContentLoaded', function () {
-                                                    @if ($errors->hasBag('tambah_data'))
-                                                        $('#modalTambahData').modal('show');
+                                                    @if ($errors->hasBag($dataLaporanKegiatanTerbaru->id))
+                                                        $('#modalTolakLaporan{{ $dataLaporanKegiatanTerbaru->id }}').modal('show');
                                                     @endif
                                                 });
                                             </script>
                                         </div>
                                     </form>
+                                @empty
+                                    <tr>
+                                        <td><a>Data Kosong!</a></td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-11 col-sm-7 col-md-8 col-lg-9 col-xl-10 colxxl-11 mx-auto p-2">
+                <div class="bg-light card text-center rounded p-3">
+                    <div class="row align-items-center justify-content-between mb-4">
+                        <div class="row">
+                            <div class="col text-center">
+                                <h3 class="mb-0">Data Laporan Kegiatan Diterima</h3>
+                            </div>
+                            <div class="d-flex">
+                                
+                            </div>    
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table " style="width: 100%; ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Tahun Kegiatan</th>
+                                    <th scope="col">Nama Kegiatan</th>
+                                    <th scope="col">Judul Laporan</th>
+                                    <th scope="col">Nama Tim</th>
+                                    <th scope="col">Informasi Kegiatan</th>
+                                    <th scope="col">Lampiran</th>
+                                    <th scope="col">Opsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($data_laporan_kegiatan_diterima as $dataLaporanKegiatanDiterima)
+                                    <tr class="align-middle">
+                                        @if($dataLaporanKegiatanDiterima->status_laporan == null)
+                                            <td>-</td>
+                                        @else
+                                            <td>{{ $dataLaporanKegiatanDiterima->status_laporan }}</td>
+                                        @endif
+                                        <td>{{ $dataLaporanKegiatanDiterima->tahun_kegiatan->tahun }}</td>
+                                        <td>{{ $dataLaporanKegiatanDiterima->tahun_kegiatan->nama }}</td>
+                                        <td>{{ $dataLaporanKegiatanDiterima->judul_laporan }}</td>
+                                        <td>{{ $dataLaporanKegiatanDiterima->nama_tim_kegiatan }}</td>
+                                        <td><textarea disabled>{{ $dataLaporanKegiatanDiterima->informasi_kegiatan }}</textarea></td>
+                                        <td role="button" data-bs-toggle="modal" data-bs-target="#modalLampiran{{ $dataLaporanKegiatanDiterima->id }}">{{ $dataLaporanKegiatanDiterima->lampiran }}</td>
+                                        <td>
+                                            <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatanDiterima]) }}" class="btn btn-primary" >Unduh</a>
+                                        </td>
+                                    </tr>
+                                    {{-- Modal Detail Riwayat Peminjaman --}}
+                                    <div class="modal fade" id="modalLampiran{{ $dataLaporanKegiatanDiterima->id }}">
+                                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                                            <div class="modal-content">
+                                                <div class="card text-center">
+                                                    <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item ">Judul Laporan : {{ File::size($dataLaporanKegiatanDiterima->lampiran) }}</li>
+                                                        <li class="list-group-item ">Jumlah Supir : {{ File::name($dataLaporanKegiatanDiterima->lampiran) }}</li>
+                                                        <li class="list-group-item ">Kendaraan : {{ File::extension($dataLaporanKegiatanDiterima->lampiran) }}</li>
+                                                        <li class="list-group-item ">Jumlah Kendaraan : Test</li>
+                                                        <li class="list-group-item ">Status : Test</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <tr>
+                                        <td><a>Data Kosong!</a></td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-11 col-sm-7 col-md-8 col-lg-9 col-xl-10 colxxl-11 mx-auto p-2">
+                <div class="bg-light card text-center rounded p-3">
+                    <div class="row align-items-center justify-content-between mb-4">
+                        <div class="row">
+                            <div class="col text-center">
+                                <h3 class="mb-0">Data Laporan Kegiatan Ditolak</h3>
+                            </div>
+                            <div class="d-flex">
+                                
+                            </div>    
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table" style="width: 100%; ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Tahun Kegiatan</th>
+                                    <th scope="col">Nama Kegiatan</th>
+                                    <th scope="col">Judul Laporan</th>
+                                    <th scope="col">Nama Tim</th>
+                                    <th scope="col">Informasi Kegiatan</th>
+                                    <th scope="col">Lampiran</th>
+                                    <th scope="col">Opsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($data_laporan_kegiatan_ditolak as $dataLaporanKegiatanDitolak)
+                                    <tr class="align-middle">
+                                        @if($dataLaporanKegiatanDitolak->status_laporan == null)
+                                            <td>-</td>
+                                        @else
+                                            <td>{{ $dataLaporanKegiatanDitolak->status_laporan }}</td>
+                                        @endif
+                                        <td>{{ $dataLaporanKegiatanDitolak->tahun_kegiatan->tahun }}</td>
+                                        <td>{{ $dataLaporanKegiatanDitolak->tahun_kegiatan->nama }}</td>
+                                        <td>{{ $dataLaporanKegiatanDitolak->judul_laporan }}</td>
+                                        <td>{{ $dataLaporanKegiatanDitolak->nama_tim_kegiatan }}</td>
+                                        <td><textarea disabled>{{ $dataLaporanKegiatanDitolak->informasi_kegiatan }}</textarea></td>
+                                        <td>{{ $dataLaporanKegiatanDitolak->lampiran }}</td>
+                                        <td>
+                                            <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatanDitolak]) }}" class="btn btn-primary" >Unduh</a>
+                                        </td>
+                                    </tr>
                                 @empty
                                     <tr>
                                         <td><a>Data Kosong!</a></td>

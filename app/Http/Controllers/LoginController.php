@@ -150,13 +150,26 @@ class LoginController extends Controller
 
         }elseif(Auth::user()->role === 'Manajemen') {
 
-            $data_laporan_kegiatan = 
-            LaporanKegiatan::orderBy('updated_at','desc')
+            $data_laporan_kegiatan_terbaru = 
+            LaporanKegiatan::where('status_laporan',null)
+                ->orderBy('updated_at','desc')
+                ->orderBy('created_at','desc')
+                ->get();
+            $data_laporan_kegiatan_diterima = 
+            LaporanKegiatan::where('status_laporan','Diterima')
+                ->orderBy('updated_at','desc')
+                ->orderBy('created_at','desc')
+                ->get();
+            $data_laporan_kegiatan_ditolak = 
+            LaporanKegiatan::where('status_laporan','Ditolak')
+                ->orderBy('updated_at','desc')
                 ->orderBy('created_at','desc')
                 ->get();
 
             return view('manajemen.homepage')
-                ->with('data_laporan_kegiatan',$data_laporan_kegiatan);
+                ->with('data_laporan_kegiatan_terbaru',$data_laporan_kegiatan_terbaru)
+                ->with('data_laporan_kegiatan_diterima',$data_laporan_kegiatan_diterima)
+                ->with('data_laporan_kegiatan_ditolak',$data_laporan_kegiatan_ditolak);
 
         }elseif(Auth::user()->role === 'Ketua') {
 

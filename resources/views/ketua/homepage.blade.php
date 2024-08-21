@@ -26,6 +26,29 @@
                         <a class="nav-link active" aria-current="page" href="{{ route('ketua.homepage') }}">Homepage</a>
                     </li>
                 </ul>
+                <div class="dropdown me-3">
+                    <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        @if(Auth::user()->notifikasi)
+                            <i class="fa-solid fa-bell fa-xl">
+                                <span class="position-absolute top-0 start-60 translate-middle p-2 bg-danger border border-light rounded-circle"></span>
+                                <span class="visually-hidden">New alerts</span>
+                            </i>
+                        @else
+                            <i class="fa-solid fa-bell fa-xl"></i>
+                        @endif
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end p-2">
+                        @forelse(Auth::user()->notifikasi->slice(0, 3) as $notification)
+                            <li class="dropdown-item" data-bs-toggle="modal" role="button" data-bs-target="#lightbox{{ $notification->id }}">
+                                <h6 class="fw-normal mb-0">{{ $notification->pesan }}</h6>
+                                <small>{{ $notification->created_at->setTimezone(new \DateTimeZone('Asia/Jakarta'))->format('Y-m-d H:i') }}</small>
+                            </li>
+                            <hr class="dropdown-divider">
+                        @empty
+                            <h6 class="fw-normal mb-0">Tidak ada notifikasi terbaru!</h6>
+                        @endforelse
+                    </ul>
+                </div>
                 <li class="nav-item dropdown nav-link">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->username }}</a>
                     <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">

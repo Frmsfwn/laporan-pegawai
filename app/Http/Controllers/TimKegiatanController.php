@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AnggotaTim;
 use App\Models\LaporanKegiatan;
+use App\Models\Notifikasi;
 use App\Models\TahunKegiatan;
 use App\Models\TimKegiatan;
 use App\Models\User;
@@ -147,7 +148,7 @@ class TimKegiatanController extends Controller
 
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
             $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
-            $data_admin_tim = 
+            $data_ketua_tim = 
                 AnggotaTim::where('id_tim_kegiatan',$data_tim_kegiatan->id)
                     ->whereHas('user', function (Builder $query) {
                         $query->where('role', '=', 'Ketua');
@@ -171,13 +172,13 @@ class TimKegiatanController extends Controller
                 return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
                     ->with('data_tim_kegiatan',$data_tim_kegiatan)
                     ->with('keyword',$keyword)
-                    ->with('data_admin_tim',$data_admin_tim);    
+                    ->with('data_ketua_tim',$data_ketua_tim);    
             }    
 
             return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
                 ->with('data_tim_kegiatan',$data_tim_kegiatan)
                 ->with('keyword',$keyword)
-                ->with('data_admin_tim',$data_admin_tim);
+                ->with('data_admin_tim',$data_ketua_tim);
         
         }elseif(Auth::user()->role === 'Ketua') {
             
@@ -458,5 +459,37 @@ class TimKegiatanController extends Controller
         $_EXTENSTION = $_PATH_INFO['extension'];
 
         return response()->download($path, "$LaporanKegiatan->judul_laporan.$_EXTENSTION");
+    }
+
+    function acceptLaporan(LaporanKegiatan $LaporanKegiatan)
+    {
+        $LaporanKegiatan->update([
+            'status_laporan' => 'Diterima',
+        ]);
+
+        return redirect(route('manajemen.homepage'));
+    }
+
+    function declineLaporan(Request $request,LaporanKegiatan $LaporanKegiatan)
+    {
+        $data_ketua_tim = 
+        User::where('role','Ketua')
+            ->whereHas('anggota_tim', function (Builder $query) use ($LaporanKegiatan) {
+                $query->whereHas('tim_kegiatan', function (Builder $query) use ($LaporanKegiatan) {
+                    $query->where('id', '=', $LaporanKegiatan->tim_kegiatan->id);
+                });
+            })->first();
+
+        $LaporanKegiatan->update([
+            'status_laporan' => 'Ditolak',
+        ]);
+        
+        $Notifikasi = new Notifikasi;
+        $Notifikasi->id_user = $data_ketua_tim->id;
+        $Notifikasi->id_laporan_kegiatan = $LaporanKegiatan->id;
+        $Notifikasi->pesan = "Laporan anda ditolak, Alasan: $request->alasan";
+        $Notifikasi->save();
+
+        return redirect(route('manajemen.homepage'));
     }
 }

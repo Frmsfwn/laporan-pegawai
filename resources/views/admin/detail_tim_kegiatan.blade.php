@@ -108,7 +108,7 @@
                                             <div class="col-sm-12 flex-column d-flex">
                                                 <strong class="text-start"><label for="role_anggota" class="form-label">Role<span class="text-danger">*</span></label></strong>
                                                 <select id="role_anggota" name="role_anggota" class="form-select @error('role_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
-                                                    @if($data_admin_tim->isNotEmpty())
+                                                    @if($data_ketua_tim->isNotEmpty())
                                                         <option value="Anggota" default selected>Anggota</option>
                                                     @else
                                                         <option value="Anggota" default selected>Anggota</option>
@@ -208,7 +208,7 @@
                                                                         @else
                                                                             <option value="{{ $dataAnggota->role }}" selected hidden>{{ $dataAnggota->role }}</option>
                                                                         @endif
-                                                                        @if($data_admin_tim->isNotEmpty())
+                                                                        @if($data_ketua_tim->isNotEmpty())
                                                                             <option value="Anggota">Anggota</option>
                                                                         @else
                                                                             <option value="Anggota">Anggota</option>
