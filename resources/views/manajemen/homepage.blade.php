@@ -82,7 +82,11 @@
                                         <td>{{ $dataLaporanKegiatan->lampiran }}</td>
                                         <td>
                                             <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary" >Download</a>
+                                        </td>
+                                        <td>
                                             <a href="" class="btn btn-success">Terima</a>
+                                        </td>
+                                        <td>
                                             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalTolakLaporan{{ $dataLaporanKegiatan->id }}">Tolak</button>
                                         </td>
                                     </tr>

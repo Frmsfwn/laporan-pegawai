@@ -103,7 +103,7 @@
                                 <tr>
                                     <th scope="col">Nama Tim</th>
                                     <th scope="col">Jumlah Anggota</th>
-                                    <th scope="col">Opsi</th>
+                                    <th scope="col" colspan="3">Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -118,8 +118,12 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('admin.show.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => $dataTimKegiatan->nama]) }}" class="btn btn-primary">Detail</a> |
-                                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataTimKegiatan->id }}">Ubah</button> |
+                                            <a href="{{ route('admin.show.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => $dataTimKegiatan->nama]) }}" class="btn btn-primary">Detail</a>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataTimKegiatan->id }}">Ubah</button>
+                                        </td>
+                                        <td>
                                             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataTimKegiatan->id }}">Hapus</button>
                                         </td>
                                     </tr>
