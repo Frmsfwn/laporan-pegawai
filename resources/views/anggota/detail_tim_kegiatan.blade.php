@@ -20,13 +20,10 @@
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <a class="navbar-brand" href="{{ route('anggota.homepage') }}">Homepage</a>
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ route('anggota.show.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}">Detail Tim Kegiatan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('anggota.homepage') }}">Homepage</a>
+                        <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('anggota.show.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}">Detail Tim Kegiatan</a>
                     </li>
                 </ul>
                 <li class="nav-item dropdown nav-link">

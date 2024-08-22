@@ -18,23 +18,21 @@
 </head>
 <body>
     {{-- Navbar --}}
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ route('admin.homepage') }}">Homepage</a>
-                    </li>
-                </ul>
-                <li class="nav-item dropdown nav-link">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->username }}</a>
-                    <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
-                        <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-                    </ul>
+            <ul class="nav navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('admin.homepage') }}">Homepage</a>
                 </li>
-            </div>
+            </ul>
+            <li class="nav-item dropdown nav-link">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->username }}</a>
+                <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
+                    <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                </ul>
+            </li>
         </div>
     </nav>
     {{-- Card Table --}}    
