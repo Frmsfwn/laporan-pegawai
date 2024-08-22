@@ -9,9 +9,41 @@
     {{-- Bootstrap --}}
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
+    {{-- FontAwesome --}}
+    <script src="https://kit.fontawesome.com/e814145206.js" crossorigin="anonymous"></script>
+    
 </head>
 <body>
-    <h2>Ubah Password</h2>
+    {{-- Navbar --}}
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link pt-2 pb-1" href="{{ route('admin.homepage') }}">Homepage</a>
+                    </li>
+                </ul>
+                <li class="nav-item dropdown nav-link">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->username }}</a>
+                    <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
+                        <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+    </nav>
+    {{-- Card Table --}}    
+        <div class="container-fluid pt-4 px-4">
+            <div class="row g-4">
+                <div class="col-11 col-sm-7 col-md-8 col-lg-9 col-xl-10 colxxl-11 mx-auto p-2">
+                    <div class="bg-light card rounded p-3">
+                        <div class="row align-items-center justify-content-between mb-4">
+                            <div class="row">
+                                <div class="d-flex">
+                                    
+                                </div>    
+                            </div>
+                        </div>
+    <h2 class="text-center">Ubah Password</h2>
     <form action="{{ route('update.password', ['User' => Auth::user()]) }}" method="POST">
     @csrf
     @method('PUT')
@@ -42,7 +74,7 @@
             @enderror
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Ubah</button>
+    <button type="submit" class="btn btn-primary mt-3">Ubah</button>
     </form>
 </body>
 </html>
