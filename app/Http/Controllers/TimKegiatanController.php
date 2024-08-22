@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class TimKegiatanController extends Controller
 {
@@ -148,6 +149,13 @@ class TimKegiatanController extends Controller
 
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
             $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
+            $data_anggota_tim = 
+                User::whereHas('anggota_tim', function (Builder $query) use ($data_tim_kegiatan) {
+                    $query->whereRelation('tim_kegiatan', 'id', '=', $data_tim_kegiatan->id);
+                })
+                ->orderBy('updated_at','desc')
+                ->orderBy('created_at','desc')
+                ->get();
             $data_ketua_tim = 
                 AnggotaTim::where('id_tim_kegiatan',$data_tim_kegiatan->id)
                     ->whereHas('user', function (Builder $query) {
@@ -156,29 +164,26 @@ class TimKegiatanController extends Controller
 
             $keyword = $request->input('keyword');
             if ($keyword) {
-                $data_tim_kegiatan = collect($data_tim_kegiatan->anggota_tim->user)->filter(function ($item) use ($keyword) {
-                    $data = collect([
-                        $item->nip,
-                        $item->nama,
-                        $item->username,
-                        $item->role,
-                    ]);
-                    return false !== stristr($data, $keyword);
-                });
-                $data_tim_kegiatan
-                    ->sortByDesc('updated_at')
-                    ->sortByDesc('created_at');
-
-                return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
-                    ->with('data_tim_kegiatan',$data_tim_kegiatan)
-                    ->with('keyword',$keyword)
-                    ->with('data_ketua_tim',$data_ketua_tim);    
+                $data_anggota_tim =
+                    AnggotaTim::where('id_tim_kegiatan',$data_tim_kegiatan->id)
+                        ->whereHas('user', function (Builder $query) use ($keyword) {
+                            $query->whereAny([
+                                    'nip',
+                                    'nama',
+                                    'username',
+                                    'role',
+                                ],'like', "%$keyword%");
+                        })
+                        ->orderBy('updated_at','desc')
+                        ->orderBy('created_at','desc')
+                        ->get();
             }    
 
             return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
-                ->with('data_tim_kegiatan',$data_tim_kegiatan)
                 ->with('keyword',$keyword)
-                ->with('data_admin_tim',$data_ketua_tim);
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('data_anggota_tim',$data_anggota_tim)
+                ->with('data_ketua_tim',$data_ketua_tim);
         
         }elseif(Auth::user()->role === 'Ketua') {
             
@@ -187,14 +192,13 @@ class TimKegiatanController extends Controller
             return view('ketua.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
                 ->with('data_tim_kegiatan',$data_tim_kegiatan);
 
-
         }elseif(Auth::user()->role === 'Anggota') {
             
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
             $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
             return view('anggota.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
                 ->with('data_tim_kegiatan',$data_tim_kegiatan);
-    
+
         }    
     }
 
@@ -210,8 +214,13 @@ class TimKegiatanController extends Controller
             'username_anggota.required' => 'Username tidak dapat kosong.',
             'username_anggota.max:25' => 'Username maksimal 25 karakter.',
             'username_anggota.unique' => 'Username telah ditambahkan pada database.',
+            'password_anggota.min' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_anggota.max' => 'Password maksimal berisi 25 terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_anggota.letters' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_anggota.mixedCase' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_anggota.numbers' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_anggota.symbols' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
             'password_anggota.required' => 'Password tidak dapat kosong.',
-            'password_anggota.max' => 'Password maksimal 25 karakter.',
             'role_anggota.required' => 'Role tidak dapat kosong.',
         ];
 
@@ -225,7 +234,15 @@ class TimKegiatanController extends Controller
             'nip_anggota' => 'required|max_digits:25|numeric|unique:users,nip',
             'nama_anggota' => 'required|max:25',
             'username_anggota' => 'required|max:25|unique:users,username',
-            'password_anggota' => 'required|max:25',
+            'password_anggota' => [
+                Password::min(8)
+                    ->max(25)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->required()
+            ],
             'role_anggota' => 'required|in:Anggota,Ketua',
         ],$messages)->validateWithBag('tambah_data');
 
@@ -266,8 +283,13 @@ class TimKegiatanController extends Controller
             'username_anggota.required' => 'Username tidak dapat kosong.',
             'username_anggota.max:25' => 'Username maksimal 25 karakter.',
             'username_anggota.unique' => 'Username telah ditambahkan pada databsse.',
+            'password_anggota.min' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_anggota.max' => 'Password maksimal berisi 25 terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_anggota.letters' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_anggota.mixedCase' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_anggota.numbers' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_anggota.symbols' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
             'password_anggota.required' => 'Password tidak dapat kosong.',
-            'password_anggota.max' => 'Password maksimal 25 karakter.',
             'role_anggota.required' => 'Role tidak dapat kosong.',
         ];
 
@@ -281,7 +303,15 @@ class TimKegiatanController extends Controller
             'nip_anggota' => ['required','max_digits:25','numeric',Rule::unique('users','nip')->ignore($AnggotaTim->id)],
             'nama_anggota' => 'required|max:25',
             'username_anggota' => ['required','max:25',Rule::unique('users','username')->ignore($AnggotaTim->id)],
-            'password_anggota' => 'required|max:25',
+            'password_anggota' => [
+                Password::min(8)
+                    ->max(25)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->required()
+            ],
             'role_anggota' => 'required|in:Anggota,Ketua',
         ],$messages)->validateWithBag($AnggotaTim->id);
 

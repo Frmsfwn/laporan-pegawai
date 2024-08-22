@@ -180,27 +180,11 @@
                                         <td>{{ $dataLaporanKegiatanDiterima->judul_laporan }}</td>
                                         <td>{{ $dataLaporanKegiatanDiterima->nama_tim_kegiatan }}</td>
                                         <td><textarea disabled>{{ $dataLaporanKegiatanDiterima->informasi_kegiatan }}</textarea></td>
-                                        <td role="button" data-bs-toggle="modal" data-bs-target="#modalLampiran{{ $dataLaporanKegiatanDiterima->id }}">{{ $dataLaporanKegiatanDiterima->lampiran }}</td>
+                                        <td>{{ $dataLaporanKegiatanDiterima->lampiran }}</td>
                                         <td>
                                             <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatanDiterima]) }}" class="btn btn-primary" >Unduh</a>
                                         </td>
                                     </tr>
-                                    {{-- Modal Detail Riwayat Peminjaman --}}
-                                    <div class="modal fade" id="modalLampiran{{ $dataLaporanKegiatanDiterima->id }}">
-                                        <div class="modal-dialog modal-dialog-centered modal-sm">
-                                            <div class="modal-content">
-                                                <div class="card text-center">
-                                                    <ul class="list-group list-group-flush">
-                                                        <li class="list-group-item ">Judul Laporan : {{ File::size($dataLaporanKegiatanDiterima->lampiran) }}</li>
-                                                        <li class="list-group-item ">Jumlah Supir : {{ File::name($dataLaporanKegiatanDiterima->lampiran) }}</li>
-                                                        <li class="list-group-item ">Kendaraan : {{ File::extension($dataLaporanKegiatanDiterima->lampiran) }}</li>
-                                                        <li class="list-group-item ">Jumlah Kendaraan : Test</li>
-                                                        <li class="list-group-item ">Status : Test</li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 @empty
                                     <tr>
                                         <td><a>Data Kosong!</a></td>
