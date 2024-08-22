@@ -302,7 +302,7 @@
                                         </td>
                                         <td>{{ $dataLaporanKegiatan->judul_laporan }}</td>
                                         <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
-                                        <td>{{ $dataLaporanKegiatan->informasi_kegiatan }}</td>
+                                        <td><textarea disabled>{{ $dataLaporanKegiatan->informasi_kegiatan }}</textarea></td>
                                         <td>{{ $dataLaporanKegiatan->lampiran }}</td>
                                         <td>
                                             <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary">Unduh</a>

@@ -85,10 +85,14 @@
                                         <td>{{ $dataLaporanKegiatanTerbaru->lampiran }}</td>
                                         <td>
                                             <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatanTerbaru]) }}" class="btn btn-primary" >Unduh</a>
+                                        </td>
+                                        <td>
                                             <form action="{{ route('manajemen.accept.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatanTerbaru]) }}" method="POST">
                                                 @csrf
                                                 <button type="submit" class="btn btn-success">Terima</button>
                                             </form>
+                                        </td>
+                                        <td>
                                             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalTolakLaporan{{ $dataLaporanKegiatanTerbaru->id }}">Tolak</button>
                                         </td>
                                     </tr>

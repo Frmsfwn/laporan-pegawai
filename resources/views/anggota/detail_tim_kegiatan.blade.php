@@ -97,6 +97,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th>Status</th>
                                     <th>Judul Laporan</th>
                                     <th>Nama Tim Kegiatan</th>
                                     <th>Informasi Kegiatan</th>
@@ -105,14 +106,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($data_tim_kegiatan->laporan_kegiatan as $dataLaporanKegiatan)
+                                @forelse ($data_tim_kegiatan->laporan_kegiatan->sortBy('created_at') as $dataLaporanKegiatan)
                                     <tr>
+                                        <td>
+                                            @if($dataLaporanKegiatan->status_laporan == null)
+                                                -
+                                            @else
+                                                {{ $dataLaporanKegiatan->status_laporan }}
+                                            @endif
+                                        </td>
                                         <td>{{ $dataLaporanKegiatan->judul_laporan }}</td>
                                         <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
-                                        <td>{{ $dataLaporanKegiatan->informasi_kegiatan }}</td>
+                                        <td><textarea disabled>{{ $dataLaporanKegiatan->informasi_kegiatan }}</textarea></td>
                                         <td>{{ $dataLaporanKegiatan->lampiran }}</td>
                                         <td>
-                                            <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary" >Download</a> |
+                                            <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary" >Unduh</a> |
                                             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataLaporanKegiatan->id }}">Ubah</button>
                                         </td>
                                     </tr>

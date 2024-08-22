@@ -37,7 +37,7 @@
                         @endif
                     </div>
                     <ul class="dropdown-menu dropdown-menu-end p-2">
-                        @forelse(Auth::user()->notifikasi->slice(0, 3) as $notification)
+                        @forelse(Auth::user()->notifikasi->sortByDesc('created_at')->slice(0, 3) as $notification)
                             <li class="dropdown-item" data-bs-toggle="modal" role="button" data-bs-target="#lightbox{{ $notification->id }}">
                                 <h6 class="fw-normal mb-0">{{ $notification->pesan }}</h6>
                                 <small>{{ $notification->created_at->setTimezone(new \DateTimeZone('Asia/Jakarta'))->format('Y-m-d H:i') }}</small>

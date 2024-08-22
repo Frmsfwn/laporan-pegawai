@@ -517,7 +517,7 @@ class TimKegiatanController extends Controller
         $Notifikasi = new Notifikasi;
         $Notifikasi->id_user = $data_ketua_tim->id;
         $Notifikasi->id_laporan_kegiatan = $LaporanKegiatan->id;
-        $Notifikasi->pesan = "Laporan anda ditolak, Alasan: $request->alasan";
+        $Notifikasi->pesan = "Laporan dengan judul: $LaporanKegiatan->judul_laporan ditolak, Alasan: $request->alasan";
         $Notifikasi->save();
 
         return redirect(route('manajemen.homepage'));

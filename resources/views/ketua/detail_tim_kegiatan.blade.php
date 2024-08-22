@@ -180,20 +180,32 @@
                                     <th>Nama Tim Kegiatan</th>
                                     <th>Informasi Kegiatan</th>
                                     <th>Lampiran</th>
+                                    <th></th>
                                     <th>Opsi</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($data_tim_kegiatan->laporan_kegiatan as $dataLaporanKegiatan)
+                                @forelse ($data_tim_kegiatan->laporan_kegiatan->sortBy('created_at') as $dataLaporanKegiatan)
                                     <tr>
-                                        <td>{{ $dataLaporanKegiatan->status_laporan }}</td>
+                                        <td>
+                                            @if($dataLaporanKegiatan->status_laporan == null)
+                                                -
+                                            @else
+                                                {{ $dataLaporanKegiatan->status_laporan }}
+                                            @endif
+                                        </td>
                                         <td>{{ $dataLaporanKegiatan->judul_laporan }}</td>
                                         <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
-                                        <td>{{ $dataLaporanKegiatan->informasi_kegiatan }}</td>
+                                        <td><textarea disabled>{{ $dataLaporanKegiatan->informasi_kegiatan }}</textarea></td>
                                         <td>{{ $dataLaporanKegiatan->lampiran }}</td>
                                         <td>
-                                            <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary" >Unduh</a> |
-                                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataLaporanKegiatan->id }}">Ubah</button> |
+                                            <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary">Unduh</a> 
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataLaporanKegiatan->id }}">Ubah</button>
+                                        </td>
+                                        <td>
                                             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataLaporanKegiatan->id }}">Hapus</button>
                                         </td>
                                     </tr>
