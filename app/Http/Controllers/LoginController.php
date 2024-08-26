@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class LoginController extends Controller
 {
@@ -118,8 +119,13 @@ class LoginController extends Controller
             'password_lama.required' => 'Kolom password tidak dapat kosong.',
             'password_lama.max' => 'Kolom password maksimal berisi 50 karakter.',
             'password_lama.current_password' => 'Password tidak sesuai',
-            'password_baru.required' => 'Kolom password tidak dapat kosong.',
-            'password_baru.max' => 'Kolom password maksimal berisi 50 karakter.',
+            'password_baru.min' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_baru.max' => 'Password maksimal berisi 25 terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_baru.letters' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_baru.mixedCase' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_baru.numbers' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_baru.symbols' => 'Password minimal berisi 8 karakter terdiri dari; huruf besar dan huruf kecil, angka, dan simbol.',
+            'password_baru.required' => 'Password tidak dapat kosong.',
             'konfirmasi_password.required' => 'Kolom password tidak dapat kosong.',
             'konfirmasi_password.max' => 'Kolom password maksimal berisi 50 karakter.',
             'konfirmasi_password.same' => 'Password tidak sesuai',
@@ -127,7 +133,15 @@ class LoginController extends Controller
 
         Validator::make($request->input(), [
             'password_lama' => 'required|max:50|current_password:web',
-            'password_baru' => 'required|max:50',
+            'password_baru' => [
+                Password::min(8)
+                    ->max(25)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->required()
+            ],
             'konfirmasi_password' => 'required|max:50|same:password_baru',
         ],$messages)->validateWithBag('ubah_password');
 
