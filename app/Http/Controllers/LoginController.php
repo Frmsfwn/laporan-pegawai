@@ -30,52 +30,67 @@ class LoginController extends Controller
             'password' => 'required|max:50', 
         ],$messages)->validateWithBag('login');
 
-        $inputeddata = [
-            'username' => $request->input('username'),
-            'password' => $request->input('password'),
-        ];
+        if (User::where('username','=',$request->input('username'))->exists()) {
 
-        if(Auth::attempt($inputeddata)) {
-            if (Auth::user()->role === 'Admin') {
+            $inputeddata = [
+                'username' => $request->input('username'),
+                'password' => $request->input('password'),
+            ];
+    
+            if (Auth::attempt($inputeddata)) {
+                if (Auth::user()->role === 'Admin') {
 
+                    flash()
+                    ->killer(true)
+                    ->layout('bottomRight')
+                    ->timeout(3000)
+                    ->success('<b>Berhasil!</b><br>Proses login berhasil.');
+
+                    return redirect(route('admin.homepage'));
+
+                }elseif (Auth::user()->role === 'Manajemen') {
+
+                    flash()
+                    ->killer(true)
+                    ->layout('bottomRight')
+                    ->timeout(3000)
+                    ->success('<b>Berhasil!</b><br>Proses login berhasil.');
+
+                    return redirect(route('manajemen.homepage'));
+
+                }elseif (Auth::user()->role === 'Ketua') {
+                    
+                    flash()
+                    ->killer(true)
+                    ->layout('bottomRight')
+                    ->timeout(3000)
+                    ->success('<b>Berhasil!</b><br>Proses login berhasil.');
+
+                    return redirect(route('ketua.homepage'));
+
+                }elseif (Auth::user()->role === 'Anggota') {
+                    
+                    flash()
+                    ->killer(true)
+                    ->layout('bottomRight')
+                    ->timeout(3000)
+                    ->success('<b>Berhasil!</b><br>Proses login berhasil.');
+
+                    return redirect(route('anggota.homepage'));
+
+                }
+            }else {
                 flash()
                 ->killer(true)
                 ->layout('bottomRight')
                 ->timeout(3000)
-                ->success('<b>Berhasil!</b><br>Proses login berhasil.');
+                ->error('<b>Kesalahan!</b><br>Proses login gagal.');
 
-                return redirect(route('admin.homepage'));
-
-            }elseif (Auth::user()->role === 'Manajemen') {
-
-                flash()
-                ->killer(true)
-                ->layout('bottomRight')
-                ->timeout(3000)
-                ->success('<b>Berhasil!</b><br>Proses login berhasil.');
-
-                return redirect(route('manajemen.homepage'));
-
-            }elseif (Auth::user()->role === 'Ketua') {
-                
-                flash()
-                ->killer(true)
-                ->layout('bottomRight')
-                ->timeout(3000)
-                ->success('<b>Berhasil!</b><br>Proses login berhasil.');
-
-                return redirect(route('ketua.homepage'));
-
-            }elseif (Auth::user()->role === 'Anggota') {
-                
-                flash()
-                ->killer(true)
-                ->layout('bottomRight')
-                ->timeout(3000)
-                ->success('<b>Berhasil!</b><br>Proses login berhasil.');
-
-                return redirect(route('anggota.homepage'));
-
+                return redirect(route('login'))
+                    ->withErrors([
+                        'password' => 'Password tidak sesuai.',
+                    ],'login')
+                    ->onlyInput('username');
             }
         }else {
             flash()
@@ -86,8 +101,7 @@ class LoginController extends Controller
 
             return redirect(route('login'))
                 ->withErrors([
-                    'username' => 'Username atau Password tidak sesuai.',
-                    'password' => 'Username atau Password tidak sesuai.',
+                    'username' => "Akun dengan username; $request->username tidak ditemukan.",
                 ],'login')
                 ->onlyInput('username');
         }
