@@ -16,9 +16,9 @@
     <script src="https://kit.fontawesome.com/e814145206.js" crossorigin="anonymous"></script>
 
 </head>
-<body>
+<body class="bg-body-secondary">
     {{-- Navbar --}}
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('admin.homepage') }}">Homepage</a>
                 <ul class="navbar-nav me-auto flex-row">
@@ -40,285 +40,271 @@
             </div>
         </div>
     </nav>
-    {{-- Card Table --}}    
-    <div class="container-fluid pt-4 px-4">
-        <div class="row g-4">
-            <div class="col-11 col-sm-7 col-md-8 col-lg-9 col-xl-10 colxxl-11 mx-auto p-2">
-                <div class="bg-light card text-center rounded p-3">
-                    <div class="row align-items-center justify-content-between mb-4">
-                        <div class="row">
-                            <div class="col text-center">
-                                <h3 class="mb-0">Data Anggota Tim Kegiatan</h3>
-                            </div>
-                            <div class="d-flex">
-                                
-                            </div>    
-                            <div class="col-7 col-md-4 col-xxl-2 mt-2">
-                                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalTambahData">Tambah Data</button>
-                            </div>
-                            <form class="d-flex col-7 col-md-4 col-xxl-2 mt-2" role="search" action="{{ route('admin.search.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}" method="GET">
-                                <input class="form-control w-100" name="keyword" id="search" type="search" value="{{ $keyword }}" placeholder="Search" aria-label="Search">
-                                <button class="btn btn-outline-success" type="submit">Search</button>
+    <main class="container-fluid ps-3 my-4">
+        <section class="row g-2 justify-content-between">
+            <button class="btn btn-success mb-sm-3 ms-1 col-auto" data-bs-toggle="modal" data-bs-target="#modalTambahData"><i class="fa-solid fa-plus me-2"></i>Tambah Data</button>
+            {{-- Modal Tambah Data --}}
+            <div class="modal fade" id="modalTambahData" tabindex="-1" aria-labelledby="modalTambahDataLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content container-fluid p-0 container-md">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalTambahDataLabel">Tambah Data Anggota Tim</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('admin.create.anggota_tim', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}" method="POST" class="form-card">
+                                @csrf
+                                <div class="row justify-content-between text-left mb-2">
+                                    <div class="col-sm-12 flex-column d-flex">
+                                        <strong class="text-start"><label for="nip_anggota" class="form-label">NIP<span class="text-danger">*</span></label></strong>
+                                        <input type="number" id="nip_anggota" name="nip_anggota" @if($errors->hasBag('tambah_data')) value="{{ old('nip_anggota') }}" @endif maxlength="25" class="form-control @error('nip_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
+                                        @error('nip_anggota', 'tambah_data')
+                                            <div class="text-danger"><small>{{ $errors->tambah_data->first('nip_anggota') }}</small></div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-12 flex-column d-flex">
+                                        <strong class="text-start"><label for="nama_anggota" class="form-label">Nama<span class="text-danger">*</span></label></strong>
+                                        <input type="text" id="nama_anggota" name="nama_anggota" @if($errors->hasBag('tambah_data')) value="{{ old('nama_anggota') }}" @endif maxlength="25" class="form-control @error('nama_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
+                                        @error('nama_anggota', 'tambah_data')
+                                            <div class="text-danger"><small>{{ $errors->tambah_data->first('nama_anggota') }}</small></div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-12 flex-column d-flex">
+                                        <strong class="text-start"><label for="username_anggota" class="form-label">Username<span class="text-danger">*</span></label></strong>
+                                        <input type="text" id="username_anggota" name="username_anggota" @if($errors->hasBag('tambah_data')) value="{{ old('username_anggota') }}" @endif maxlength="25" value="" class="form-control @error('username_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
+                                        @error('username_anggota', 'tambah_data')
+                                            <div class="text-danger"><small>{{ $errors->tambah_data->first('username_anggota') }}</small></div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-12 flex-column d-flex">
+                                        <strong class="text-start"><label for="password_anggota" class="form-label">Password<span class="text-danger">*</span></label></strong>
+                                        <input type="password" id="password_anggota" name="password_anggota" minlength="8" maxlength="25" class="form-control @error('password_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
+                                        @error('password_anggota', 'tambah_data')
+                                            <div class="text-danger"><small>{{ $errors->tambah_data->first('password_anggota') }}</small></div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-12 flex-column d-flex">
+                                        <strong class="text-start"><label for="role_anggota" class="form-label">Role<span class="text-danger">*</span></label></strong>
+                                        <select id="role_anggota" name="role_anggota" class="form-select @error('role_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
+                                            @if($data_ketua_tim->isNotEmpty())
+                                                <option value="Anggota" default selected>Anggota</option>
+                                            @else
+                                                <option value="Anggota" default selected>Anggota</option>
+                                                <option value="Ketua" >Ketua</option>
+                                            @endif
+                                        </select>
+                                        @error('role_anggota', 'tambah_data')
+                                            <div class="text-danger text-start"><small>{{ $message }}</small></div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Tambah</button>
+                                </div>
                             </form>
                         </div>
                     </div>
-                    {{-- Modal Tambah Data --}}
-                    <form action="{{ route('admin.create.anggota_tim', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}" method="POST" class="form-card">
-                        @csrf
-                        <div class="modal fade" id="modalTambahData" tabindex="-1" aria-labelledby="modalTambahDataLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content container-fluid p-0 container-md">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modalTambahDataLabel">Tambah Data Anggota Tim</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row justify-content-between text-left mb-2">
-                                            <div class="col-sm-12 flex-column d-flex">
-                                                <strong class="text-start"><label for="nip_anggota" class="form-label">NIP<span class="text-danger">*</span></label></strong>
-                                                <input type="number" id="nip_anggota" name="nip_anggota" @if($errors->hasBag('tambah_data')) value="{{ old('nip_anggota') }}" @endif maxlength="25" class="form-control @error('nip_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
-                                                @error('nip_anggota', 'tambah_data')
-                                                    <div class="text-danger"><small>{{ $errors->tambah_data->first('nip_anggota') }}</small></div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-sm-12 flex-column d-flex">
-                                                <strong class="text-start"><label for="nama_anggota" class="form-label">Nama<span class="text-danger">*</span></label></strong>
-                                                <input type="text" id="nama_anggota" name="nama_anggota" @if($errors->hasBag('tambah_data')) value="{{ old('nama_anggota') }}" @endif maxlength="25" class="form-control @error('nama_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
-                                                @error('nama_anggota', 'tambah_data')
-                                                    <div class="text-danger"><small>{{ $errors->tambah_data->first('nama_anggota') }}</small></div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-sm-12 flex-column d-flex">
-                                                <strong class="text-start"><label for="username_anggota" class="form-label">Username<span class="text-danger">*</span></label></strong>
-                                                <input type="text" id="username_anggota" name="username_anggota" @if($errors->hasBag('tambah_data')) value="{{ old('username_anggota') }}" @endif maxlength="25" value="" class="form-control @error('username_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
-                                                @error('username_anggota', 'tambah_data')
-                                                    <div class="text-danger"><small>{{ $errors->tambah_data->first('username_anggota') }}</small></div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-sm-12 flex-column d-flex">
-                                                <strong class="text-start"><label for="password_anggota" class="form-label">Password<span class="text-danger">*</span></label></strong>
-                                                <input type="password" id="password_anggota" name="password_anggota" minlength="8" maxlength="25" class="form-control @error('password_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
-                                                @error('password_anggota', 'tambah_data')
-                                                    <div class="text-danger"><small>{{ $errors->tambah_data->first('password_anggota') }}</small></div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-sm-12 flex-column d-flex">
-                                                <strong class="text-start"><label for="role_anggota" class="form-label">Role<span class="text-danger">*</span></label></strong>
-                                                <select id="role_anggota" name="role_anggota" class="form-select @error('role_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
-                                                    @if($data_ketua_tim->isNotEmpty())
-                                                        <option value="Anggota" default selected>Anggota</option>
-                                                    @else
-                                                        <option value="Anggota" default selected>Anggota</option>
-                                                        <option value="Ketua" >Ketua</option>
-                                                    @endif
-                                                </select>
-                                                @error('role_anggota', 'tambah_data')
-                                                    <div class="text-danger text-start"><small>{{ $message }}</small></div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Tambah</button>
-                                    </div>
+                </div>
+            </div>
+            <form class="col-12 col-sm-auto" action="{{ route('admin.search.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}" method="GET">
+                <div class="input-group mb-3">
+                    <button type="submit" class="input-group-text shadow-sm" for="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <input type="text" class="form-control shadow-sm" name="keyword" id="search" type="search" value="{{ $keyword }}" placeholder="Search" aria-label="Search">
+                </div>
+            </form>
+        </section>
+        <h2 class="m-auto text-black text-center mb-3">Data Anggota Tim</h2>
+        <section class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-6 g-3 mb-3">
+            @forelse($data_anggota_tim as $dataAnggota)
+            {{-- Card --}}
+            <div class="col">
+                <div class="card">
+                    <div class="overflow-hidden rounded">
+                        <ul class="list-group list-group-flush">                
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Username</h4>
+                                <h5 class="card-text fw-normal">{{ $dataAnggota->username }}</h5>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> NIP</h4>
+                                <h5 class="card-text fw-normal">{{ $dataAnggota->nip }}</h5>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Nama</h4>
+                                <h5 class="card-text fw-normal">{{ $dataAnggota->nama }}</h5>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Role</h4>
+                                <h5 class="card-text fw-normal">{{ $dataAnggota->role }}</h5>
+                            </li>
+                            <li class="list-group-item ">
+                                <div class="row g-2">
+                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataAnggota->id }}">Ubah</button>
+                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataAnggota->id }}">Hapus</button>
                                 </div>
-                            </div>
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    @if ($errors->hasBag('tambah_data'))
-                                        $('#modalTambahData').modal('show');
-                                    @endif
-                                });
-                            </script>
+                            </li>                                                
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {{-- Modal Ubah Data --}}
+            <div class="modal fade" id="modalUbahData{{ $dataAnggota->id }}" tabindex="-1" aria-labelledby="modalUbahDataLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content container-fluid p-0">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalUbahDataLabel">Ubah Data Anggota Tim</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                    </form>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>NIP</th>
-                                    <th>Nama</th>
-                                    <th>Username</th>
-                                    <th>Role</th>
-                                    <th colspan="2">Opsi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($data_anggota_tim as $dataAnggota)
-                                    <tr>
-                                        <td>{{ $dataAnggota->nip }}</td>
-                                        <td>{{ $dataAnggota->nama }}</td>
-                                        <td>{{ $dataAnggota->username }}</td>
-                                        <td>{{ $dataAnggota->role }}</td>
-                                        <td>
-                                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalUbahData{{ $dataAnggota->id }}">Ubah</button>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData{{ $dataAnggota->id }}">Hapus</button>
-                                        </td>
-                                    </tr>
-                                    {{-- Modal Ubah Data --}}
-                                    <form action="{{ route('admin.edit.data_anggota_tim', ['AnggotaTim' => $dataAnggota]) }}" method="POST" class="form-card">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="modal fade" id="modalUbahData{{ $dataAnggota->id }}" tabindex="-1" aria-labelledby="modalUbahDataLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content container-fluid p-0">
-                                                    <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="modalUbahDataLabel">Ubah Data Anggota Tim</h1>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="row justify-content-between text-left mb-2">
-                                                            <div class="col-sm-12 flex-column d-flex">
-                                                                <strong class="text-start"><label for="nip_anggota" class="form-label">NIP<span class="text-danger">*</span></label></strong>
-                                                                <input type="text" id="nip_anggota" name="nip_anggota" @if($errors->hasBag($dataAnggota->id)) value="{{ old('nip_anggota') }}" @else value="{{ $dataAnggota->nip }}" @endif maxlength="25" class="form-control @error('nip_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
-                                                                @error('nip_anggota', $dataAnggota->id)
-                                                                    <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('nip_anggota') }}</small></div>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="col-sm-12 flex-column d-flex">
-                                                                <strong class="text-start"><label for="nama_anggota" class="form-label">Nama<span class="text-danger">*</span></label></strong>
-                                                                <input type="text" id="nama_anggota" name="nama_anggota" @if($errors->hasBag($dataAnggota->id)) value="{{ old('nama_anggota') }}" @else value="{{ $dataAnggota->nama }}" @endif maxlength="25" class="form-control @error('nama_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
-                                                                @error('nama_anggota', $dataAnggota->id)
-                                                                    <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('nama_anggota') }}</small></div>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="col-sm-12 flex-column d-flex">
-                                                                <strong class="text-start"><label for="username_anggota" class="form-label">Username<span class="text-danger">*</span></label></strong>
-                                                                <input type="text" id="username_anggota" name="username_anggota" @if($errors->hasBag($dataAnggota->id)) value="{{ old('username_anggota') }}" @else value="{{ $dataAnggota->username }}" @endif maxlength="25" class="form-control @error('username_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
-                                                                @error('username_anggota', $dataAnggota->id)
-                                                                    <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('username_anggota') }}</small></div>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="col-sm-12 flex-column d-flex">
-                                                                <strong class="text-start"><label for="password_anggota" class="form-label">Password<span class="text-danger">*</span></label></strong>
-                                                                <input type="password" id="password_anggota" name="password_anggota" minlength="8" maxlength="25" class="form-control @error('password_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
-                                                                @error('password_anggota', $dataAnggota->id)
-                                                                    <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('password_anggota') }}</small></div>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="col-sm-12 flex-column d-flex">
-                                                                <strong class="text-start"><label for="role_anggota" class="form-label">Role<span class="text-danger">*</span></label></strong>
-                                                                <select id="role_anggota" name="role_anggota" class="form-select @error('role_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
-                                                                    @if($errors->hasBag($dataAnggota->id))
-                                                                        <option value="{{ old('role_anggota') }}" selected hidden>{{ old('role_anggota') }}</option>
-                                                                    @else
-                                                                        <option value="{{ $dataAnggota->role }}" selected hidden>{{ $dataAnggota->role }}</option>
-                                                                    @endif
-                                                                    @if($data_ketua_tim->isNotEmpty())
-                                                                        <option value="Anggota">Anggota</option>
-                                                                    @else
-                                                                        <option value="Anggota">Anggota</option>
-                                                                        <option value="Ketua" >Ketua</option>
-                                                                    @endif
-                                                                </select>
-                                                                @error('role_anggota', $dataAnggota->id)
-                                                                    <div class="text-danger text-start"><small>{{ $message }}</small></div>
-                                                                @enderror
-                                                            </div>                
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary">Ubah</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <script>
-                                                document.addEventListener('DOMContentLoaded', function () {
-                                                    @if ($errors->hasBag($dataAnggota->id))
-                                                        $("#modalUbahData{{ $dataAnggota->id }}").modal('show');
-                                                    @endif
-                                                });
-                                            </script>            
-                                        </div>
-                                    </form>
-                                    {{-- Modal Konfirmasi Hapus Data --}}
-                                    <div class="modal fade" id="modalHapusData{{ $dataAnggota->id }}" tabindex="-1" aria-labelledby="modalHapusDataLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="modalHapusDataLabel">Hapus Data Anggota Tim</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Apakah anda yakin ingin menghapus data ini?<br>
-                                                    <b>NIP : {{ $dataAnggota->nip }} | Nama : {{ $dataAnggota->nama }}</b>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form action="{{ route('admin.delete.data_anggota_tim', ['AnggotaTim' => $dataAnggota]) }}" method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger">Hapus</button>
-                                                    </form>
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
-                                                </div>
-                                            </div>
-                                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('admin.edit.data_anggota_tim', ['AnggotaTim' => $dataAnggota]) }}" method="POST" class="form-card">
+                                @csrf
+                                @method('PUT')
+                                <div class="row justify-content-between text-left mb-2">
+                                    <div class="col-sm-12 flex-column d-flex">
+                                        <strong class="text-start"><label for="nip_anggota" class="form-label">NIP<span class="text-danger">*</span></label></strong>
+                                        <input type="text" id="nip_anggota" name="nip_anggota" @if($errors->hasBag($dataAnggota->id)) value="{{ old('nip_anggota') }}" @else value="{{ $dataAnggota->nip }}" @endif maxlength="25" class="form-control @error('nip_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
+                                        @error('nip_anggota', $dataAnggota->id)
+                                            <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('nip_anggota') }}</small></div>
+                                        @enderror
                                     </div>
-                                @empty
-                                    <tr>
-                                        <td><a>Data Kosong!</a></td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-11 col-sm-7 col-md-8 col-lg-9 col-xl-10 colxxl-11 mx-auto p-2">
-                <div class="bg-light card text-center rounded p-3">
-                    <div class="row align-items-center justify-content-between mb-4">
-                        <div class="row">
-                            <div class="col text-center">
-                                <h3 class="mb-0">Data Laporan Tim Kegiatan</h3>
-                            </div>
-                            <div class="d-flex">
-                                
-                            </div>    
+                                    <div class="col-sm-12 flex-column d-flex">
+                                        <strong class="text-start"><label for="nama_anggota" class="form-label">Nama<span class="text-danger">*</span></label></strong>
+                                        <input type="text" id="nama_anggota" name="nama_anggota" @if($errors->hasBag($dataAnggota->id)) value="{{ old('nama_anggota') }}" @else value="{{ $dataAnggota->nama }}" @endif maxlength="25" class="form-control @error('nama_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
+                                        @error('nama_anggota', $dataAnggota->id)
+                                            <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('nama_anggota') }}</small></div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-12 flex-column d-flex">
+                                        <strong class="text-start"><label for="username_anggota" class="form-label">Username<span class="text-danger">*</span></label></strong>
+                                        <input type="text" id="username_anggota" name="username_anggota" @if($errors->hasBag($dataAnggota->id)) value="{{ old('username_anggota') }}" @else value="{{ $dataAnggota->username }}" @endif maxlength="25" class="form-control @error('username_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
+                                        @error('username_anggota', $dataAnggota->id)
+                                            <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('username_anggota') }}</small></div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-12 flex-column d-flex">
+                                        <strong class="text-start"><label for="password_anggota" class="form-label">Password<span class="text-danger">*</span></label></strong>
+                                        <input type="password" id="password_anggota" name="password_anggota" minlength="8" maxlength="25" class="form-control @error('password_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
+                                        @error('password_anggota', $dataAnggota->id)
+                                            <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('password_anggota') }}</small></div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-12 flex-column d-flex">
+                                        <strong class="text-start"><label for="role_anggota" class="form-label">Role<span class="text-danger">*</span></label></strong>
+                                        <select id="role_anggota" name="role_anggota" class="form-select @error('role_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
+                                            @if($errors->hasBag($dataAnggota->id))
+                                                <option value="{{ old('role_anggota') }}" selected hidden>{{ old('role_anggota') }}</option>
+                                            @else
+                                                <option value="{{ $dataAnggota->role }}" selected hidden>{{ $dataAnggota->role }}</option>
+                                            @endif
+                                            @if($data_ketua_tim->isNotEmpty())
+                                                <option value="Anggota">Anggota</option>
+                                            @else
+                                                <option value="Anggota">Anggota</option>
+                                                <option value="Ketua" >Ketua</option>
+                                            @endif
+                                        </select>
+                                        @error('role_anggota', $dataAnggota->id)
+                                            <div class="text-danger text-start"><small>{{ $message }}</small></div>
+                                        @enderror
+                                    </div>                
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Ubah</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Status Laporan</th>
-                                    <th>Judul Laporan</th>
-                                    <th>Nama Tim Kegiatan</th>
-                                    <th>Informasi Kegiatan</th>
-                                    <th>Lampiran</th>
-                                    <th>Opsi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($data_tim_kegiatan->laporan_kegiatan->sortBy('created_at') as $dataLaporanKegiatan)
-                                    <tr>
-                                        <td>
-                                            @if($dataLaporanKegiatan->status_laporan == null)
-                                                -
-                                            @else
-                                                {{ $dataLaporanKegiatan->status_laporan }}
-                                            @endif
-                                        </td>
-                                        <td>{{ $dataLaporanKegiatan->judul_laporan }}</td>
-                                        <td>{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</td>
-                                        <td><textarea disabled>{{ $dataLaporanKegiatan->informasi_kegiatan }}</textarea></td>
-                                        <td>{{ $dataLaporanKegiatan->lampiran }}</td>
-                                        <td>
-                                            <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary">Unduh</a>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td><a>Data Kosong!</a></td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            @if ($errors->hasBag($dataAnggota->id))
+                                $("#modalUbahData{{ $dataAnggota->id }}").modal('show');
+                            @endif
+                        });
+                    </script>            
+                </div>
+            </div>
+
+            {{-- Modal Konfirmasi Hapus Data --}}
+            <div class="modal fade" id="modalHapusData{{ $dataAnggota->id }}" tabindex="-1" aria-labelledby="modalHapusDataLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalHapusDataLabel">Hapus Data Anggota Tim</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Apakah anda yakin ingin menghapus data ini?<br>
+                            <b>NIP : {{ $dataAnggota->nip }} | Nama : {{ $dataAnggota->nama }}</b>
+                        </div>
+                        <div class="modal-footer">
+                            <form action="{{ route('admin.delete.data_anggota_tim', ['AnggotaTim' => $dataAnggota]) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Hapus</button>
+                            </form>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+
+            @empty
+                <h3 class="m-auto text-secondary opacity-75 text-center mt-3">Data Kosong</h3>
+            @endforelse
+        </section>
+        <h2 class="m-auto text-black text-center mb-3">Data Laporan Tim Kegiatan</h2>
+        <section class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-6 g-3 mb-3">
+            @forelse ($data_tim_kegiatan->laporan_kegiatan->sortBy('created_at') as $dataLaporanKegiatan)
+            {{-- Card --}}
+            <div class="col">
+                <div class="card">
+                    <div class="overflow-hidden rounded">
+                        <ul class="list-group list-group-flush">                
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Judul Laporan</h4>
+                                <h5 class="card-text fw-normal">{{ $dataLaporanKegiatan->judul_laporan }}</h5>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Nama Tim Kegiatan</h4>
+                                <h5 class="card-text fw-normal">{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</h5>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Informasi Kegiatan</h4>
+                                <h5 class="card-text fw-normal">{{ $dataLaporanKegiatan->informasi_kegiatan }}</h5>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Status</h4>
+                                <h5 class="card-text fw-normal">
+                                    @if($dataLaporanKegiatan->status_laporan == null)
+                                        -
+                                    @else
+                                        {{ $dataLaporanKegiatan->status_laporan }}
+                                    @endif
+                                </h5>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Lampiran</h4>
+                                <h5 class="card-text fw-normal">{{ $dataLaporanKegiatan->lampiran }}</h5>
+                            </li>
+                            <li class="list-group-item ">
+                                <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary">Unduh</a>                            </li>                                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            @empty
+                <h3 class="m-auto text-secondary opacity-75 text-center mt-3">Data Kosong</h3>
+            @endforelse
+        </section>
+    </main>
+    {{-- Script Modal --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @if ($errors->hasBag('tambah_data'))
+                $('#modalTambahData').modal('show');
+            @endif
+        });
+    </script>
 </body>
 </html>
