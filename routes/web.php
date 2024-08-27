@@ -18,21 +18,28 @@ Route::group(['middleware' => 'preventBackHistory'], function(){
         Route::get('/password/edit', [LoginController::class, 'editPassword'])->name('edit.password');
         Route::put('{User}/password/update', [LoginController::class, 'updatePassword'])->name('update.password');
         Route::prefix('admin')->name('admin.')->middleware(['userAccess:Admin'])->group(function() {
+
             route::get('/homepage', [LoginController::class, 'homepage'])->name('homepage');
-            Route::get('/homepage/search', [LoginController::class, 'homepage'])->name('search.data_tahun_kegiatan');
-            route::post('/data/tahun_kegiatan/create', [TahunKegiatanController::class, 'createDataTahun'])->name('create.data_tahun_kegiatan');
-            route::put('/data/tahun_kegiatan/{TahunKegiatan}/edit', [TahunKegiatanController::class, 'editDataTahun'])->name('edit.data_tahun_kegiatan');
-            route::delete('/data/tahun_kegiatan/{TahunKegiatan}/delete', [TahunKegiatanController::class, 'deleteDataTahun'])->name('delete.data_tahun_kegiatan');
-            route::get('/data/tahun_kegiatan/{tahun}/tim_kegiatan', [TimKegiatanController::class, 'showDataTim'])->name('show.data_tim_kegiatan');
-            route::get('/data/tahun_kegiatan/{tahun}/tim_kegiatan/search', [TimKegiatanController::class, 'showDataTim'])->name('search.data_tim_kegiatan');
-            route::post('/data/tahun_kegiatan/{tahun}/tim_kegiatan/create', [TimKegiatanController::class, 'createDataTim'])->name('create.data_tim_kegiatan');
-            route::put('/data/tahun_kegiatan/tim_kegiatan/{TimKegiatan}/edit', [TimKegiatanController::class, 'editDataTim'])->name('edit.data_tim_kegiatan');
-            route::delete('/data/tahun_kegiatan/tim_kegiatan/{TimKegiatan}/delete', [TimKegiatanController::class, 'deleteDataTim'])->name('delete.data_tim_kegiatan');
-            route::get('/data/tahun_kegiatan/{tahun}/tim_kegiatan/{nama}/detail', [TimKegiatanController::class, 'showDetailTim'])->name('show.detail_tim_kegiatan');
-            route::get('/data/tahun_kegiatan/{tahun}/tim_kegiatan/{nama}/detail/search', [TimKegiatanController::class, 'showDetailTim'])->name('search.detail_tim_kegiatan');
-            route::post('/data/tahun_kegiatan/{tahun}/tim_kegiatan/{nama}/anggota/create', [TimKegiatanController::class, 'createAnggotaTim'])->name('create.anggota_tim');
-            route::put('/data/tahun_kegiatan/tim_kegiatan/anggota/{AnggotaTim}/edit', [TimKegiatanController::class, 'editAnggotaTim'])->name('edit.data_anggota_tim');
-            route::delete('/data/tahun_kegiatan/tim_kegiatan/anggota/{AnggotaTim}/delete', [TimKegiatanController::class, 'deleteAnggotaTim'])->name('delete.data_anggota_tim');
+            Route::get('/homepage/search', [LoginController::class, 'homepage'])->name('search.data_tahun');
+            route::post('/data/tahun/create', [TahunKegiatanController::class, 'createDataTahun'])->name('create.data_tahun');
+            route::put('/data/tahun/{TahunKegiatan}/edit', [TahunKegiatanController::class, 'editDataTahun'])->name('edit.data_tahun');
+            route::delete('/data/tahun/{TahunKegiatan}/delete', [TahunKegiatanController::class, 'deleteDataTahun'])->name('delete.data_tahun');
+
+            route::get('/data/tahun/{tahun}/tim', [TimKegiatanController::class, 'showDataTim'])->name('show.data_tim');
+            route::get('/data/tahun/{tahun}/tim/search', [TimKegiatanController::class, 'showDataTim'])->name('search.data_tim');
+            route::post('/data/tahun/{tahun}/tim/create', [TimKegiatanController::class, 'createDataTim'])->name('create.data_tim');
+            route::put('/data/tim/{TimKegiatan}/edit', [TimKegiatanController::class, 'editDataTim'])->name('edit.data_tim');
+            route::delete('/data/tim/{TimKegiatan}/delete', [TimKegiatanController::class, 'deleteDataTim'])->name('delete.data_tim');
+
+            route::get('/data/tahun/{tahun}/tim/{nama}/anggota', [TimKegiatanController::class, 'showDataAnggota'])->name('show.data_anggota');
+            route::get('/data/tahun/{tahun}/tim/{nama}/anggota/search', [TimKegiatanController::class, 'showDataAnggota'])->name('search.data_anggota');
+            route::post('/data/tahun/{tahun}/tim/{nama}/anggota/create', [TimKegiatanController::class, 'createDataAnggota'])->name('create.data_anggota');
+            route::put('/data/anggota/{AnggotaTim}/edit', [TimKegiatanController::class, 'editDataAnggota'])->name('edit.data_anggota');
+            route::delete('/data/anggota/{AnggotaTim}/delete', [TimKegiatanController::class, 'deleteDataAnggota'])->name('delete.data_anggota');
+
+            route::get('/data/tahun/{tahun}/tim/{nama}/laporan', [TimKegiatanController::class, 'showDataLaporan'])->name('show.data_laporan');
+            route::get('/data/tahun/{tahun}/tim/{nama}/laporan/search', [TimKegiatanController::class, 'showDataLaporan'])->name('search.data_laporan');
+
         });
         Route::prefix('manajemen')->name('manajemen.')->middleware(['userAccess:Manajemen'])->group(function() {
             route::get('/homepage', [LoginController::class, 'Homepage'])->name('homepage');

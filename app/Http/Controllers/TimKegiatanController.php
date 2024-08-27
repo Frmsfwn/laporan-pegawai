@@ -15,48 +15,31 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Ramsey\Uuid\Type\Time;
 
 class TimKegiatanController extends Controller
 {
     function showDataTim(Request $request)
     {
-        if(Auth::user()->role === 'Admin') {
+        $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+        $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->sortByDesc('updated_at');
 
-            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->sortByDesc('updated_at');
+        $keyword = $request->input('keyword');
+        if ($keyword) {
+            $data_tim_kegiatan = collect($data_tim_kegiatan)->filter(function ($item) use ($keyword) {
+                return false !== stristr($item->nama, $keyword);
+            });
+            $data_tim_kegiatan
+                ->sortByDesc('updated_at');
 
-            $keyword = $request->input('keyword');
-            if ($keyword) {
-                $data_tim_kegiatan = collect($data_tim_kegiatan)->filter(function ($item) use ($keyword) {
-                    return false !== stristr($item->nama, $keyword);
-                });
-                $data_tim_kegiatan
-                    ->sortByDesc('updated_at');
-
-                return view('admin.data_tim_kegiatan')
-                    ->with('data_tim_kegiatan',$data_tim_kegiatan)
-                    ->with('keyword',$keyword);    
-            }    
-
-            return view('admin.data_tim_kegiatan')
+            return view('admin.data_tim')
                 ->with('data_tim_kegiatan',$data_tim_kegiatan)
-                ->with('keyword',$keyword);
+                ->with('keyword',$keyword);    
+        }    
 
-        }elseif(Auth::user()->role === 'Ketua') {
-            
-            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->sortByDesc('updated_at');
-            return view('ketua.data_tim_kegiatan')
-                ->with('data_tim_kegiatan',$data_tim_kegiatan);
-
-        }elseif(Auth::user()->role === 'Anggota') {
-            
-            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->sortByDesc('updated_at');
-            return view('anggota.data_tim_kegiatan')
-                ->with('data_tim_kegiatan',$data_tim_kegiatan);
-
-        }
+        return view('admin.data_tim')
+            ->with('data_tim_kegiatan',$data_tim_kegiatan)
+            ->with('keyword',$keyword);
     }
 
     function createDataTim(Request $request)
@@ -90,7 +73,7 @@ class TimKegiatanController extends Controller
         ->timeout(3000)
         ->success('<b>Berhasil!</b><br>Data berhasil ditambahkan.');
 
-        return redirect(route('admin.show.data_tim_kegiatan', ['tahun' => request('tahun')]));
+        return redirect(route('admin.show.data_tim', ['tahun' => request('tahun')]));
     }
 
     function editDataTim(TimKegiatan $TimKegiatan,Request $request)
@@ -121,7 +104,7 @@ class TimKegiatanController extends Controller
         ->timeout(3000)
         ->success('<b>Berhasil!</b><br>Data berhasil diubah.');
 
-        return redirect(route('admin.show.data_tim_kegiatan', ['tahun' => $TimKegiatan->tahun_kegiatan->tahun]));
+        return redirect(route('admin.show.data_tim', ['tahun' => $TimKegiatan->tahun_kegiatan->tahun]));
     }
 
     function deleteDataTim(TimKegiatan $TimKegiatan)
@@ -140,15 +123,15 @@ class TimKegiatanController extends Controller
         ->timeout(3000)
         ->success('<b>Berhasil!</b><br>Data berhasil dihapus.');
 
-        return redirect(route('admin.show.data_tim_kegiatan', ['tahun' => $TimKegiatan->tahun_kegiatan->tahun]));
+        return redirect(route('admin.show.data_tim', ['tahun' => $TimKegiatan->tahun_kegiatan->tahun]));
     }
 
-    function showDetailTim(Request $request)
+    function showDataAnggota(Request $request)
     {
         if(Auth::user()->role === 'Admin') {
 
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-            $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
+            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->where('nama',request('nama'))->first();
             $data_anggota_tim = 
                 User::whereHas('anggota_tim', function (Builder $query) use ($data_tim_kegiatan) {
                     $query->whereRelation('tim_kegiatan', 'id', '=', $data_tim_kegiatan->id);
@@ -179,7 +162,7 @@ class TimKegiatanController extends Controller
                         ->get();
             }    
 
-            return view('admin.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
+            return view('admin.data_anggota', ['tahun' => request('tahun'), 'nama' => request('nama')])
                 ->with('keyword',$keyword)
                 ->with('data_tim_kegiatan',$data_tim_kegiatan)
                 ->with('data_anggota_tim',$data_anggota_tim)
@@ -202,7 +185,7 @@ class TimKegiatanController extends Controller
         }    
     }
 
-    function createAnggotaTim(Request $request)
+    function createDataAnggota(Request $request)
     {
         $messages = [
             'nip_anggota.required' => 'NIP tidak dapat kosong.',
@@ -261,17 +244,16 @@ class TimKegiatanController extends Controller
         $anggota_tim->id_anggota = $user->id;
         $anggota_tim->save();
         
-
         flash()
         ->killer(true)
         ->layout('bottomRight')
         ->timeout(3000)
         ->success('<b>Berhasil!</b><br>Data berhasil ditambahkan.');
 
-        return redirect(route('admin.show.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')]));
+        return redirect(route('admin.show.data_anggota', ['tahun' => request('tahun'), 'nama' => request('nama')]));
     }
 
-    function editAnggotaTim(User $AnggotaTim,Request $request)
+    function editDataAnggota(User $AnggotaTim,Request $request)
     {
         $messages = [
             'nip_anggota.required' => 'NIP tidak dapat kosong.',
@@ -332,10 +314,10 @@ class TimKegiatanController extends Controller
         $data_tahun_kegiatan = $AnggotaTim->anggota_tim->tim_kegiatan->tahun_kegiatan->tahun;
         $data_tim_kegiatan = $AnggotaTim->anggota_tim->tim_kegiatan->nama;
 
-        return redirect(route('admin.show.detail_tim_kegiatan', ['tahun' => $data_tahun_kegiatan, 'nama' => $data_tim_kegiatan]));
+        return redirect(route('admin.show.data_anggota', ['tahun' => $data_tahun_kegiatan, 'nama' => $data_tim_kegiatan]));
     }
 
-    function deleteAnggotaTim(User $AnggotaTim)
+    function deleteDataAnggota(User $AnggotaTim)
     {
         $data_tahun_kegiatan = $AnggotaTim->anggota_tim->tim_kegiatan->tahun_kegiatan->tahun;
         $data_tim_kegiatan = $AnggotaTim->anggota_tim->tim_kegiatan->nama;
@@ -348,7 +330,7 @@ class TimKegiatanController extends Controller
         ->timeout(3000)
         ->success('<b>Berhasil!</b><br>Data berhasil dihapus.');
 
-        return redirect(route('admin.show.detail_tim_kegiatan', ['tahun' => $data_tahun_kegiatan, 'nama' => $data_tim_kegiatan]));
+        return redirect(route('admin.show.data_anggota', ['tahun' => $data_tahun_kegiatan, 'nama' => $data_tim_kegiatan]));
     }
 
     function createLaporanKegiatan(Request $request)
