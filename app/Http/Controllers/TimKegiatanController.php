@@ -22,7 +22,7 @@ class TimKegiatanController extends Controller
     function showDataTim(Request $request)
     {
         $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-        $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->sortByDesc('updated_at');
+        $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->get();
 
         $keyword = $request->input('keyword');
         if ($keyword) {
@@ -33,11 +33,13 @@ class TimKegiatanController extends Controller
                 ->sortByDesc('updated_at');
 
             return view('admin.data_tim')
+                ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
                 ->with('data_tim_kegiatan',$data_tim_kegiatan)
                 ->with('keyword',$keyword);    
         }    
 
         return view('admin.data_tim')
+            ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
             ->with('data_tim_kegiatan',$data_tim_kegiatan)
             ->with('keyword',$keyword);
     }
@@ -331,6 +333,19 @@ class TimKegiatanController extends Controller
         ->success('<b>Berhasil!</b><br>Data berhasil dihapus.');
 
         return redirect(route('admin.show.data_anggota', ['tahun' => $data_tahun_kegiatan, 'nama' => $data_tim_kegiatan]));
+    }
+
+    function showDataLaporan(Request $request)
+    {
+        $keyword = $request->input('keyword');
+        $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+        $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->where('nama',request('nama'))->first();
+        $data_laporan_kegiatan = LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)->get();
+
+        return view('admin.data_laporan')
+            ->with('keyword',$keyword)
+            ->with('data_tim_kegiatan',$data_tim_kegiatan)
+            ->with('data_laporan_kegiatan',$data_laporan_kegiatan);
     }
 
     function createLaporanKegiatan(Request $request)

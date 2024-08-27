@@ -15,17 +15,6 @@
     {{-- FontAwesome --}}
     <script src="https://kit.fontawesome.com/e814145206.js" crossorigin="anonymous"></script>
 
-    {{-- Custom CSS --}}
-    <style>
-        .end-reveal {
-            right: 1.3rem;
-        }
-
-        .top-reveal {
-            top: 1.85rem;
-        }
-    </style>        
-
 </head>
 <body class="bg-body-secondary">
     {{-- Navbar --}}
@@ -62,7 +51,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content container-fluid p-0 container-md">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="modalTambahDataLabel">Tambah Data Anggota Tim</h1>
+                            <h1 class="modal-title fs-5" id="modalTambahDataLabel">Tambah Data Anggota</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -95,7 +84,7 @@
                                         <input type="password" id="password_anggota" name="password_anggota" minlength="8" maxlength="25" class="form-control @error('password_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
                                         <span id="togglePassword" class="toggle-password-icon position-absolute end-0 top-50 translate-middle-y me-3" style="cursor: pointer;">
                                             <i class="fa-regular fa-eye fa-lg" id="reveal-password"></i>
-                                        </span>                        
+                                        </span>
                                         @error('password_anggota', 'tambah_data')
                                             <div class="text-danger"><small>{{ $errors->tambah_data->first('password_anggota') }}</small></div>
                                         @enderror
@@ -107,7 +96,7 @@
                                                 <option value="Anggota" default selected>Anggota</option>
                                             @else
                                                 <option value="Anggota" default selected>Anggota</option>
-                                                <option value="Ketua" >Ketua</option>
+                                                <option value="Ketua">Ketua</option>
                                             @endif
                                         </select>
                                         @error('role_anggota', 'tambah_data')
@@ -120,33 +109,7 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            @if ($errors->hasBag('tambah_data'))
-                                $("#modalTambahData").modal('show');
-                            @endif
-                        });
-
-                        $(document).ready(function() {
-                            $('#togglePassword').on('click', function() {
-                                let passwordField = $('#password');
-                                let passwordFieldType = passwordField.attr('type');
-                                
-                                if (passwordFieldType === 'password') {
-                                    passwordField.attr('type', 'text');
-                                    $('#reveal-password').removeClass('fa-regular').addClass('fa-solid');
-                                } else {
-                                    passwordField.attr('type', 'password');
-                                    $('#reveal-password').removeClass('fa-solid').addClass('fa-regular');
-                                }
-                            });
-
-                            if($('.password').hasClass('is-invalid')) {
-                                $('#togglePassword').removeClass('end-0 top-50').addClass('end-reveal top-reveal');
-                            }
-                        });
-                    </script>            
+                    </div>            
                 </div>
             </div>
             <form class="col-12 col-sm-auto" action="{{ route('admin.search.data_anggota', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}" method="GET">
@@ -156,7 +119,7 @@
                 </div>
             </form>
         </section>
-        <h2 class="m-auto text-black text-center mb-3">{{ $data_tim_kegiatan->nama }}/Anggota</h2>
+        <h2 class="m-auto text-black text-center mt-2 mb-4">{{ $data_tim_kegiatan->nama }}/Anggota</h2>
         <section class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-6 g-3 mb-3">
             @forelse($data_anggota_tim as $dataAnggota)
             {{-- Card --}}
@@ -190,12 +153,13 @@
                     </div>
                 </div>
             </div>
+
             {{-- Modal Ubah Data --}}
             <div class="modal fade" id="modalUbahData{{ $dataAnggota->id }}" tabindex="-1" aria-labelledby="modalUbahDataLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content container-fluid p-0">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="modalUbahDataLabel">Ubah Data Anggota Tim</h1>
+                            <h1 class="modal-title fs-5" id="modalUbahDataLabel">Ubah Data Anggota</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -227,6 +191,9 @@
                                     <div class="col-sm-12 flex-column d-flex">
                                         <strong class="text-start"><label for="password_anggota" class="form-label">Password<span class="text-danger">*</span></label></strong>
                                         <input type="password" id="password_anggota" name="password_anggota" minlength="8" maxlength="25" class="form-control @error('password_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
+                                        <span id="togglePassword" class="toggle-password-icon position-absolute end-0 top-50 translate-middle-y me-3" style="cursor: pointer;">
+                                            <i class="fa-regular fa-eye fa-lg" id="reveal-password"></i>
+                                        </span>                        
                                         @error('password_anggota', $dataAnggota->id)
                                             <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('password_anggota') }}</small></div>
                                         @enderror
@@ -257,13 +224,6 @@
                             </form>
                         </div>
                     </div>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            @if ($errors->hasBag($dataAnggota->id))
-                                $("#modalUbahData{{ $dataAnggota->id }}").modal('show');
-                            @endif
-                        });
-                    </script>            
                 </div>
             </div>
 
@@ -272,12 +232,12 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="modalHapusDataLabel">Hapus Data Anggota Tim</h1>
+                            <h1 class="modal-title fs-5" id="modalHapusDataLabel">Hapus Data Anggota</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body text-center">
                             Apakah anda yakin ingin menghapus data ini?<br>
-                            <b>{{ $dataAnggota->nama }}(NIP:{{ $dataAnggota->nip }})</b>
+                            <b>{{ $dataAnggota->nama }} (NIP:{{ $dataAnggota->nip }})</b>
                         </div>
                         <div class="modal-footer">
                             <form action="{{ route('admin.delete.data_anggota', ['AnggotaTim' => $dataAnggota]) }}" method="POST">
@@ -290,63 +250,45 @@
                     </div>
                 </div>
             </div>
-
-            @empty
-                <h3 class="m-auto text-secondary opacity-75 text-center mt-3">Data Kosong</h3>
-            @endforelse
-        </section>
-        <h2 class="m-auto text-black text-center mb-3">Data Laporan Tim Kegiatan</h2>
-        <section class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-6 g-3 mb-3">
-            @forelse ($data_tim_kegiatan->laporan_kegiatan->sortBy('created_at') as $dataLaporanKegiatan)
-            {{-- Card --}}
-            <div class="col">
-                <div class="card">
-                    <div class="overflow-hidden rounded">
-                        <ul class="list-group list-group-flush">                
-                            <li class="list-group-item">
-                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Judul Laporan</h4>
-                                <h5 class="card-text fw-normal">{{ $dataLaporanKegiatan->judul_laporan }}</h5>
-                            </li>
-                            <li class="list-group-item">
-                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Nama Tim Kegiatan</h4>
-                                <h5 class="card-text fw-normal">{{ $dataLaporanKegiatan->nama_tim_kegiatan }}</h5>
-                            </li>
-                            <li class="list-group-item">
-                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Informasi Kegiatan</h4>
-                                <h5 class="card-text fw-normal">{{ $dataLaporanKegiatan->informasi_kegiatan }}</h5>
-                            </li>
-                            <li class="list-group-item">
-                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Status</h4>
-                                <h5 class="card-text fw-normal">
-                                    @if($dataLaporanKegiatan->status_laporan == null)
-                                        -
-                                    @else
-                                        {{ $dataLaporanKegiatan->status_laporan }}
-                                    @endif
-                                </h5>
-                            </li>
-                            <li class="list-group-item">
-                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Lampiran</h4>
-                                <h5 class="card-text fw-normal">{{ $dataLaporanKegiatan->lampiran }}</h5>
-                            </li>
-                            <li class="list-group-item ">
-                                <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary">Unduh</a>                            </li>                                                
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
             @empty
                 <h3 class="m-auto text-secondary opacity-75 text-center mt-3">Data Kosong</h3>
             @endforelse
         </section>
     </main>
-    {{-- Script Modal --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             @if ($errors->hasBag('tambah_data'))
                 $('#modalTambahData').modal('show');
             @endif
+        });
+
+        @foreach($data_anggota_tim as $dataAnggota)
+            document.addEventListener('DOMContentLoaded', function () {
+                @if ($errors->hasBag($dataAnggota->id))
+                    $("#modalUbahData{{ $dataAnggota->id }}").modal('show');
+                @endif
+            });
+        @endforeach
+                               
+        $(document).ready(function() {
+            $('.toggle-password-icon').on('click', function() {
+                let passwordField = $(this).siblings('.form-control');
+                let passwordFieldType = passwordField.attr('type');
+                
+                if (passwordFieldType === 'password') {
+                    passwordField.attr('type', 'text');
+                    $(this).children('.fa-eye').removeClass('fa-regular').addClass('fa-solid');
+                } else {
+                    passwordField.attr('type', 'password');
+                    $(this).children('.fa-eye').removeClass('fa-solid').addClass('fa-regular');
+                }
+            });
+
+            $('.form-control').each(function() {
+                if($(this).hasClass('is-invalid')) {
+                    $(this).siblings('.toggle-password-icon').removeClass('end-0 top-50').addClass('end-reveal top-reveal');
+                }
+            })
         });
     </script>
 </body>

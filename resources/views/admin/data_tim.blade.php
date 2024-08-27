@@ -16,7 +16,7 @@
     <script src="https://kit.fontawesome.com/e814145206.js" crossorigin="anonymous"></script>
     
 </head>
-<body>
+<body class="bg-body-secondary">
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">
@@ -27,7 +27,7 @@
                     </li>
                 </ul>
                 <li class="nav-item dropdown nav-link">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}, <b>{{ Auth::user()->username }}</b></a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}/<b>{{ Auth::user()->username }}</b></a>
                     <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
                         <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
                         <li><hr class="dropdown-divider"></li>
@@ -45,7 +45,7 @@
                     <div class="row align-items-center justify-content-between mb-4">
                         <div class="row">
                             <div class="col text-center">
-                                <h3 class="mb-0">Data Tim Kegiatan</h3>
+                                <h3 class="mb-0">{{ $data_tahun_kegiatan->nama }}/Tim Kegiatan</h3>
                             </div>
                             <div class="d-flex">
                                 
@@ -66,16 +66,16 @@
                             <div class="modal-dialog">
                                 <div class="modal-content container-fluid p-0 container-md">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modalTambahDataLabel">Tambah Data Tim Kegiatan</h1>
+                                        <h1 class="modal-title fs-5" id="modalTambahDataLabel">Tambah Data Tim</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="row justify-content-between text-left mb-2">
                                             <div class="col-sm-12 flex-column d-flex">
-                                                <strong class="text-start"><label for="nama_tim" class="form-label">Nama Tim Kegiatan<span class="text-danger">*</span></label></strong>
+                                                <strong class="text-start"><label for="nama_tim" class="form-label">Nama Tim<span class="text-danger">*</span></label></strong>
                                                 <input type="text" id="nama_tim" name="nama_tim" @if($errors->hasBag('tambah_data')) value="{{ old('nama_tim') }}" @endif min="" maxlength="25" value="" class="form-control @error('nama_tim', 'tambah_data') is-invalid @enderror" @required(true)>
                                                 @error('nama_tim', 'tambah_data')
-                                                    <div class="text-danger"><small>{{ $errors->tambah_data->first('nama_tim') }}</small></div>
+                                                    <div class="text-danger text-start"><small>{{ $errors->tambah_data->first('nama_tim') }}</small></div>
                                                 @enderror
                                             </div>
                                         </div>
@@ -85,13 +85,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    @if ($errors->hasBag('tambah_data'))
-                                        $('#modalTambahData').modal('show');
-                                    @endif
-                                });
-                            </script>
                         </div>
                     </form>
                     <div class="table-responsive">
@@ -99,7 +92,6 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Nama Tim</th>
-                                    <th scope="col">Jumlah Anggota</th>
                                     <th scope="col" colspan="4">Opsi</th>
                                 </tr>
                             </thead>
@@ -107,13 +99,6 @@
                                 @forelse($data_tim_kegiatan as $dataTimKegiatan)
                                     <tr class="align-middle">
                                         <td>{{ $dataTimKegiatan->nama }}</td>
-                                        <td>
-                                            @if($dataTimKegiatan->anggota_tim == null)
-                                                -
-                                            @else    
-                                                {{ optional($dataTimKegiatan->anggota_tim)->count() }}
-                                            @endif
-                                        </td>
                                         <td>
                                             <a href="{{ route('admin.show.data_anggota', ['tahun' => request('tahun'), 'nama' => $dataTimKegiatan->nama]) }}" class="btn btn-primary">Anggota</a>
                                         </td>
@@ -135,16 +120,16 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content container-fluid p-0">
                                                     <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="modalUbahDataLabel">Ubah Data Tim Kegiatan</h1>
+                                                        <h1 class="modal-title fs-5" id="modalUbahDataLabel">Ubah Data Tim</h1>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <div class="row justify-content-between text-left mb-2">
                                                             <div class="col-sm-12 flex-column d-flex">
-                                                                <strong class="text-start"><label for="nama_tim" class="form-label">Nama Tim Kegiatan<span class="text-danger">*</span></label></strong>
+                                                                <strong class="text-start"><label for="nama_tim" class="form-label">Nama Tim<span class="text-danger">*</span></label></strong>
                                                                 <input type="text" id="nama_tim" name="nama_tim" @if($errors->hasBag($dataTimKegiatan->id)) value="{{ old('nama_tim') }}" @else value="{{ $dataTimKegiatan->nama }}" @endif min="" maxlength="25" class="form-control @error('nama_tim', $dataTimKegiatan->id) is-invalid @enderror" @required(true)>
                                                                 @error('nama_tim', $dataTimKegiatan->id)
-                                                                    <div class="text-danger"><small>{{ $errors->{$dataTimKegiatan->id}->first('nama_tim') }}</small></div>
+                                                                    <div class="text-danger text-start"><small>{{ $errors->{$dataTimKegiatan->id}->first('nama_tim') }}</small></div>
                                                                 @enderror
                                                             </div>
                                                         </div>
@@ -154,13 +139,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <script>
-                                                document.addEventListener('DOMContentLoaded', function () {
-                                                    @if ($errors->hasBag($dataTimKegiatan->id))
-                                                        $("#modalUbahData{{ $dataTimKegiatan->id }}").modal('show');
-                                                    @endif
-                                                });
-                                            </script>            
                                         </div>
                                     </form>
                                     {{-- Modal Konfirmasi Hapus Data --}}
@@ -198,5 +176,20 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @if ($errors->hasBag('tambah_data'))
+                $('#modalTambahData').modal('show');
+            @endif
+        });
+
+        @foreach($data_tim_kegiatan as $dataTimKegiatan)
+                document.addEventListener('DOMContentLoaded', function () {
+                @if ($errors->hasBag($dataTimKegiatan->id))
+                    $("#modalUbahData{{ $dataTimKegiatan->id }}").modal('show');
+                @endif
+            });
+        @endforeach;
+    </script>            
 </body>
 </html>

@@ -16,13 +16,13 @@
     <script src="https://kit.fontawesome.com/e814145206.js" crossorigin="anonymous"></script>
 
 </head>
-<body>
+<body class="bg-body-secondary">
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('admin.homepage') }}">Homepage</a>
                 <li class="nav-item dropdown nav-link">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}, <b>{{ Auth::user()->username }}</b></a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}/<b>{{ Auth::user()->username }}</b></a>
                     <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
                         <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
                         <li><hr class="dropdown-divider"></li>
@@ -61,7 +61,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content container-fluid p-0 container-md">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modalTambahDataLabel">Tambah Data Tahun Kegiatan</h1>
+                                        <h1 class="modal-title fs-5" id="modalTambahDataLabel">Tambah Data Tahun</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -89,13 +89,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    @if ($errors->hasBag('tambah_data'))
-                                        $('#modalTambahData').modal('show');
-                                    @endif
-                                });
-                            </script>
                         </div>
                     </form>
                     <div class="table-responsive">
@@ -139,7 +132,7 @@
                                                                 <strong class="text-start"><label for="tahun_kegiatan" class="form-label">Tahun Kegiatan<span class="text-danger">*</span></label></strong>
                                                                 <input type="number" id="tahun_kegiatan" name="tahun_kegiatan" @if($errors->hasBag($dataTahunKegiatan->id)) value="{{ old('tahun_kegiatan') }}" @else value="{{ $dataTahunKegiatan->tahun }}" @endif min="1901" max="2099" step="1" class="form-control @error('tahun_kegiatan', $dataTahunKegiatan->id) is-invalid @enderror" @required(true)>
                                                                 @error('tahun_kegiatan', $dataTahunKegiatan->id)
-                                                                    <div class="text-danger"><small>{{ $errors->{$dataTahunKegiatan->id}->first('tahun_kegiatan') }}</small></div>
+                                                                    <div class="text-danger text-start"><small>{{ $errors->{$dataTahunKegiatan->id}->first('tahun_kegiatan') }}</small></div>
                                                                 @enderror
                                                             </div>
                                                         </div>
@@ -148,7 +141,7 @@
                                                                 <strong class="text-start"><label for="nama_kegiatan" class="form-label">Nama Kegiatan<span class="text-danger">*</span></label></strong>
                                                                 <input type="text" id="nama_kegiatan" name="nama_kegiatan" @if($errors->hasBag($dataTahunKegiatan->id)) value="{{ old('nama_kegiatan') }}" @else value="{{ $dataTahunKegiatan->nama }}" @endif min="" maxlength="50" class="form-control @error('nama_kegiatan', $dataTahunKegiatan->id) is-invalid @enderror" placeholder="" @required(true)>
                                                                 @error('nama_kegiatan', $dataTahunKegiatan->id)
-                                                                    <div class="text-danger"><small>{{ $errors->{$dataTahunKegiatan->id}->first('nama_kegiatan') }}</small></div>
+                                                                    <div class="text-danger text-start"><small>{{ $errors->{$dataTahunKegiatan->id}->first('nama_kegiatan') }}</small></div>
                                                                 @enderror
                                                             </div>
                                                         </div>
@@ -157,14 +150,7 @@
                                                         <button type="submit" class="btn btn-primary">Ubah</button>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <script>
-                                                document.addEventListener('DOMContentLoaded', function () {
-                                                    @if ($errors->hasBag($dataTahunKegiatan->id))
-                                                        $("#modalUbahData{{ $dataTahunKegiatan->id }}").modal('show');
-                                                    @endif
-                                                });
-                                            </script>            
+                                            </div>            
                                         </div>
                                     </form>
                                     {{-- Modal Konfirmasi Hapus Data --}}
@@ -177,7 +163,10 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     Apakah anda yakin ingin menghapus data ini?<br>
-                                                    <b>Kegiatan : {{ $dataTahunKegiatan->nama }}</b>
+                                                    <b>
+                                                        Tahun : {{ $dataTahunKegiatan->tahun }}<br>
+                                                        Kegiatan : {{ $dataTahunKegiatan->nama }}
+                                                    </b>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <form action="{{ route('admin.delete.data_tahun', ['TahunKegiatan' => $dataTahunKegiatan]) }}" method="POST">
@@ -202,5 +191,21 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @if ($errors->hasBag('tambah_data'))
+                $('#modalTambahData').modal('show');
+            @endif
+        });
+
+        @foreach($data_tahun_kegiatan as $dataTahunKegiatan)
+            document.addEventListener('DOMContentLoaded', function () {
+                @if ($errors->hasBag($dataTahunKegiatan->id))
+                    $("#modalUbahData{{ $dataTahunKegiatan->id }}").modal('show');
+                @endif
+            });
+        @endforeach
+
+    </script>
 </body>
 </html>
