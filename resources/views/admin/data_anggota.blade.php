@@ -216,7 +216,7 @@
                                         @error('role_anggota', $dataAnggota->id)
                                             <div class="text-danger text-start"><small>{{ $message }}</small></div>
                                         @enderror
-                                    </div>                
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Ubah</button>

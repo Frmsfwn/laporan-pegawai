@@ -178,26 +178,26 @@ class LoginController extends Controller
 
         }elseif(Auth::user()->role === 'Manajemen') {
 
-            $data_laporan_kegiatan_terbaru = 
-            LaporanKegiatan::where('status_laporan',null)
-                ->orderBy('updated_at','desc')
-                ->orderBy('created_at','desc')
-                ->get();
-            $data_laporan_kegiatan_diterima = 
-            LaporanKegiatan::where('status_laporan','Diterima')
-                ->orderBy('updated_at','desc')
-                ->orderBy('created_at','desc')
-                ->get();
-            $data_laporan_kegiatan_ditolak = 
-            LaporanKegiatan::where('status_laporan','Ditolak')
-                ->orderBy('updated_at','desc')
-                ->orderBy('created_at','desc')
+            $data_tahun_kegiatan = 
+            TahunKegiatan::orderBy('updated_at','desc')
+                ->orderBy('created_at','desc')    
                 ->get();
 
+            $keyword = $request->input('keyword');
+            if ($keyword) {
+                $data_tahun_kegiatan = 
+                TahunKegiatan::whereAny([
+                    'tahun',
+                    'nama',
+                ],'LIKE',"%$keyword%")
+                    ->orderBy('updated_at', 'DESC')
+                    ->orderBy('created_at', 'DESC')
+                    ->get();
+            }    
+
             return view('manajemen.homepage')
-                ->with('data_laporan_kegiatan_terbaru',$data_laporan_kegiatan_terbaru)
-                ->with('data_laporan_kegiatan_diterima',$data_laporan_kegiatan_diterima)
-                ->with('data_laporan_kegiatan_ditolak',$data_laporan_kegiatan_ditolak);
+                ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
+                ->with('keyword',$keyword);
 
         }elseif(Auth::user()->role === 'Ketua') {
 

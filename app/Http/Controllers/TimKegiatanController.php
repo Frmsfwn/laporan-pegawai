@@ -15,33 +15,60 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
-use Ramsey\Uuid\Type\Time;
 
 class TimKegiatanController extends Controller
 {
     function showDataTim(Request $request)
     {
-        $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-        $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->get();
+        if(Auth::user()->role === 'Admin') {
 
-        $keyword = $request->input('keyword');
-        if ($keyword) {
-            $data_tim_kegiatan = collect($data_tim_kegiatan)->filter(function ($item) use ($keyword) {
-                return false !== stristr($item->nama, $keyword);
-            });
-            $data_tim_kegiatan
-                ->sortByDesc('updated_at');
+            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->get();
+
+            $keyword = $request->input('keyword');
+            if ($keyword) {
+                $data_tim_kegiatan = collect($data_tim_kegiatan)->filter(function ($item) use ($keyword) {
+                    return false !== stristr($item->nama, $keyword);
+                });
+                $data_tim_kegiatan
+                    ->sortByDesc('updated_at');
+
+                return view('admin.data_tim')
+                    ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
+                    ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                    ->with('keyword',$keyword);    
+            }    
 
             return view('admin.data_tim')
                 ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
                 ->with('data_tim_kegiatan',$data_tim_kegiatan)
-                ->with('keyword',$keyword);    
-        }    
+                ->with('keyword',$keyword);
 
-        return view('admin.data_tim')
-            ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
-            ->with('data_tim_kegiatan',$data_tim_kegiatan)
-            ->with('keyword',$keyword);
+        }elseif(Auth::user()->role === 'Manajemen') {
+
+            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->get();
+
+            $keyword = $request->input('keyword');
+            if ($keyword) {
+                $data_tim_kegiatan = collect($data_tim_kegiatan)->filter(function ($item) use ($keyword) {
+                    return false !== stristr($item->nama, $keyword);
+                });
+                $data_tim_kegiatan
+                    ->sortByDesc('updated_at');
+
+                return view('manajemen.data_tim')
+                    ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
+                    ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                    ->with('keyword',$keyword);    
+            }    
+
+            return view('manajemen.data_tim')
+                ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('keyword',$keyword);
+
+        }
     }
 
     function createDataTim(Request $request)
@@ -337,15 +364,31 @@ class TimKegiatanController extends Controller
 
     function showDataLaporan(Request $request)
     {
-        $keyword = $request->input('keyword');
-        $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-        $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->where('nama',request('nama'))->first();
-        $data_laporan_kegiatan = LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)->get();
+        if(Auth::user()->role === 'Admin') {
 
-        return view('admin.data_laporan')
-            ->with('keyword',$keyword)
-            ->with('data_tim_kegiatan',$data_tim_kegiatan)
-            ->with('data_laporan_kegiatan',$data_laporan_kegiatan);
+            $keyword = $request->input('keyword');
+            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->where('nama',request('nama'))->first();
+            $data_laporan_kegiatan = LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)->get();
+
+            return view('admin.data_laporan')
+                ->with('keyword',$keyword)
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('data_laporan_kegiatan',$data_laporan_kegiatan);
+
+        }elseif(Auth::user()->role === 'Manajemen') {
+
+            $keyword = $request->input('keyword');
+            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->where('nama',request('nama'))->first();
+            $data_laporan_kegiatan = LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)->get();
+    
+            return view('manajemen.data_laporan')
+                ->with('keyword',$keyword)
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('data_laporan_kegiatan',$data_laporan_kegiatan);
+    
+        }
     }
 
     function createLaporanKegiatan(Request $request)

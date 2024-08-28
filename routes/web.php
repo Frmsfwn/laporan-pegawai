@@ -56,6 +56,13 @@ Route::group(['middleware' => 'preventBackHistory'], function(){
         Route::prefix('manajemen')->name('manajemen.')->middleware(['userAccess:Manajemen'])->group(function() {
 
             route::get('/homepage', [LoginController::class, 'Homepage'])->name('homepage');
+            route::get('/homepage/search', [LoginController::class, 'Homepage'])->name('search.data_tahun');
+
+            route::get('/data/tahun/{tahun}/tim', [TimKegiatanController::class, 'showDataTim'])->name('show.data_tim');
+            route::get('/data/tahun/{tahun}/tim/search', [TimKegiatanController::class, 'showDataTim'])->name('search.data_tim');
+            
+            route::get('/data/tahun/{tahun}/tim/{nama}/laporan', [TimKegiatanController::class, 'showDataLaporan'])->name('show.data_laporan');
+            route::get('/data/tahun/{tahun}/tim/{nama}/laporan/search', [TimKegiatanController::class, 'showDataLaporan'])->name('search.data_laporan');
             route::post('/data/laporan_kegiatan/{LaporanKegiatan}/accept', [TimKegiatanController::class, 'acceptLaporan'])->name('accept.laporan_kegiatan');
             route::post('/data/laporan_kegiatan/{LaporanKegiatan}/decline', [TimKegiatanController::class, 'declineLaporan'])->name('decline.laporan_kegiatan');
             
