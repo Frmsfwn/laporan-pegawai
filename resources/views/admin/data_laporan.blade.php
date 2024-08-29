@@ -20,16 +20,13 @@
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('admin.homepage') }}">Homepage</a>
+            <a class="navbar-brand" href="{{ route('admin.homepage') }}">Homepage <i class="fa-solid fa-chevron-right fs-6"></i></a>
             <ul class="navbar-nav me-auto flex-row">
+                <li class="nav-item">
+                    <a class="nav-link active pt-2 pb-1" href="{{ route('admin.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim <i class="fa-solid fa-chevron-right fs-6"></i></a>
+                </li>
                 <li class="nav-item me-2">
-                    <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('admin.show.data_laporan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}">Data Laporan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.show.data_anggota', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}">Data Anggota</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim</a>
+                    <a class="nav-link active pt-2 pb-1 ms-2" aria-current="page" href="{{ route('admin.show.data_laporan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}">Data Laporan</a>
                 </li>
             </ul>
             <li class="nav-item dropdown nav-link">
