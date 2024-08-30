@@ -20,20 +20,18 @@
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('manajemen.homepage') }}">Homepage <i class="fa-solid fa-chevron-right fs-6"></i></a>
-                <ul class="navbar-nav me-auto flex-row">
-                    <li class="nav-item me-2">
-                        <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('admin.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim</a>
-                    </li>
+            <ul class="breadcrumb align-items-center my-2" style="--bs-breadcrumb-divider: '>';">
+                <a class="navbar-brand" href="{{ route('manajemen.homepage') }}">Homepage</a>
+                <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('manajemen.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim</a>
+            </ul>
+            <div class="nav-item dropdown nav-link">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}/<b>{{ Auth::user()->username }}</b></a>
+                <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
+                    <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
                 </ul>
-                <li class="nav-item dropdown nav-link">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}/<b>{{ Auth::user()->username }}</b></a>
-                    <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
-                        <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-                    </ul>
-                </li>
+            </div>
             </div>
         </div>
     </nav>
