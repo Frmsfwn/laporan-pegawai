@@ -18,22 +18,19 @@
 </head>
 <body class="bg-body-secondary">
     {{-- Navbar --}}
-    <nav class="navbar navbar-expand-lg bg-white shadow">
+    <nav class="navbar navbar-expand-lg bg-white shadow" aria-label="breadcrumb">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('admin.homepage') }}">Homepage</a>
-                <ul class="navbar-nav me-auto flex-row">
-                    <li class="nav-item me-2">
-                        <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('admin.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim</a>
-                    </li>
+            <ul class="breadcrumb align-items-center my-2" style="--bs-breadcrumb-divider: '>';">
+                <a class="breadcrumb-item text-black text-decoration-none" href="{{ route('admin.homepage') }}">Homepage</a>
+                <a class="breadcrumb-item active" aria-current="page" href="{{ route('admin.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim</a>
+            </ul>
+            <div class="nav-item dropdown nav-link">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}/<b>{{ Auth::user()->username }}</b></a>
+                <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
+                    <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
                 </ul>
-                <li class="nav-item dropdown nav-link">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}/<b>{{ Auth::user()->username }}</b></a>
-                    <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
-                        <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-                    </ul>
-                </li>
             </div>
         </div>
     </nav>
@@ -41,11 +38,11 @@
     <div class="container-fluid pt-4 px-4">
         <div class="row g-4">
             <div class="col-11 col-sm-7 col-md-8 col-lg-9 col-xl-10 colxxl-11 mx-auto p-2">
-                <div class="shadow-lg bg-light card text-center rounded p-3">
+                <div class="bg-light card text-center rounded p-3">
                     <div class="row align-items-center justify-content-between mb-4">
                         <div class="row">
                             <div class="col text-center">
-                                <h3 class="mb-0">{{ $data_tahun_kegiatan->nama }}/Tim Kerja</h3>
+                                <h3 class="mb-0">{{ $data_tahun_kegiatan->nama }}/Tim Kegiatan</h3>
                             </div>
                             <div class="d-flex">
                                 

@@ -33,6 +33,15 @@
             --white: #fff;
         }
 
+        .bg-log {
+            background-color: var(--white);
+        }
+
+        .icon {
+            position: absolute;
+            right: 30px;
+        }
+
         .button {
             background-color: var(--primary);
         }
@@ -48,7 +57,7 @@
     </style>
     
 </head>
-<body class="bg-body-secondary">
+<body>
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">

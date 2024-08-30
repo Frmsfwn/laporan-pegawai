@@ -9,6 +9,15 @@
     {{-- Bootstrap --}}
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
+    {{-- Custom CSS --}}
+    <style>
+        @media (max-width: 430px) {
+            .w-s-100 {
+                width: 100% !important;
+            }
+        } 
+    </style>
+    
     {{-- JQuery --}}
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 
@@ -20,20 +29,17 @@
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-                <a class="navbar-brand" href="{{ route('anggota.homepage') }}">Homepage</a>
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('anggota.show.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}">Detail Tim Kegiatan</a>
-                    </li>
+            <ul class="breadcrumb align-items-center my-2" style="--bs-breadcrumb-divider: '>';">
+                <a class="breadcrumb-item text-black text-decoration-none" href="{{ route('anggota.homepage') }}">Homepage</a>
+                <a class="breadcrumb-item active" aria-current="page" href="{{ route('anggota.show.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}">Detail Tim Kegiatan</a>
+            </ul>
+            <div class="nav-item dropdown nav-link w-s-100 text-end">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->username }}</a>
+                <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
+                    <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
                 </ul>
-                <li class="nav-item dropdown nav-link">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->username }}</a>
-                    <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
-                        <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-                    </ul>
-                </li>
             </div>
         </div>
     </nav>
