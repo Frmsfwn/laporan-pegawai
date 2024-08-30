@@ -61,7 +61,7 @@
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('admin.homepage') }}">Homepage</a>
+            <a class="navbar-brand" href="{{ route('admin.homepage') }}">Homepage <i class="fa-solid fa-chevron-right fs-6"></i></a>
                 <ul class="navbar-nav me-auto flex-row">
                     <li class="nav-item me-2">
                         <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('edit.password') }}">Ubah Password</a>

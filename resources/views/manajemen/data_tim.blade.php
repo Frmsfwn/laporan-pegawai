@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ config('app.name') }} | Manajemen | Data Tim</title>
+    <title>{{ config('app.name') }} | {{ Auth::user()->role }} | Data Tim</title>
 
     {{-- Bootstrap --}}
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -20,10 +20,10 @@
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('manajemen.homepage') }}">Homepage</a>
+            <a class="navbar-brand" href="{{ route('manajemen.homepage') }}">Homepage <i class="fa-solid fa-chevron-right fs-6"></i></a>
                 <ul class="navbar-nav me-auto flex-row">
                     <li class="nav-item me-2">
-                        <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('manajemen.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim</a>
+                        <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('admin.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim</a>
                     </li>
                 </ul>
                 <li class="nav-item dropdown nav-link">

@@ -537,7 +537,7 @@ class TimKegiatanController extends Controller
             'status_laporan' => 'Diterima',
         ]);
 
-        return redirect(route('manajemen.homepage'));
+        return redirect(route('manajemen.show.data_laporan', ['tahun' => $LaporanKegiatan->tahun_kegiatan->tahun, 'nama' => $LaporanKegiatan->tim_kegiatan->nama]));
     }
 
     function declineLaporan(Request $request,LaporanKegiatan $LaporanKegiatan)
@@ -560,6 +560,6 @@ class TimKegiatanController extends Controller
         $Notifikasi->pesan = "Laporan dengan judul: $LaporanKegiatan->judul_laporan ditolak, Alasan: $request->alasan";
         $Notifikasi->save();
 
-        return redirect(route('manajemen.homepage'));
+        return redirect(route('manajemen.show.data_laporan', ['tahun' => $LaporanKegiatan->tahun_kegiatan->tahun, 'nama' => $LaporanKegiatan->tim_kegiatan->nama]));
     }
 }

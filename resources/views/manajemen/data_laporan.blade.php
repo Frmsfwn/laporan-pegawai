@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ config('app.name') }} | Manajemen | Data Laporan</title>
+    <title>{{ config('app.name') }} | {{ Auth::user()->role }} | Data Laporan</title>
 
     {{-- Bootstrap --}}
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -20,13 +20,13 @@
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('manajemen.homepage') }}">Homepage</a>
+            <a class="navbar-brand" href="{{ route('manajemen.homepage') }}">Homepage <i class="fa-solid fa-chevron-right fs-6"></i></a>
             <ul class="navbar-nav me-auto flex-row">
-                <li class="nav-item me-2">
-                    <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('manajemen.show.data_laporan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}">Data Laporan</a>
-                </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('manajemen.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim</a>
+                    <a class="nav-link pt-2 pb-1" href="{{ route('manajemen.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim <i class="fa-solid fa-chevron-right fs-6"></i></a>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link active pt-2 pb-1 ms-2" aria-current="page" href="{{ route('manajemen.show.data_laporan', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}">Data Laporan</a>
                 </li>
             </ul>
             <li class="nav-item dropdown nav-link">
@@ -79,7 +79,9 @@
                                 <h5 class="card-text fw-normal">{{ $dataLaporanKegiatan->lampiran }}</h5>
                             </li>
                             <li class="list-group-item ">
-                                <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary">Unduh</a>                            </li>                                                
+                                <a href="{{ route('download.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-primary">Unduh</a>
+                                <a href="{{ route('manajemen.accept.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" class="btn btn-success">Terima</a>
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalKonfirmasi{{ $dataLaporanKegiatan->id }}">Tolak</button>
                             </li>
                         </ul>
                     </div>
@@ -90,5 +92,57 @@
             @endforelse
         </section>
     </main>
+    @foreach($data_laporan_kegiatan as $dataLaporanKegiatan)
+        {{-- Modal Konfirmasi Tolak Laporan --}}
+        <div class="modal fade" id="modalKonfirmasi{{ $dataLaporanKegiatan->id }}" tabindex="-1" aria-labelledby="modalKonfirmasiLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalKonfirmasiLabel">Tolak Laporan</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        Apakah anda yakin ingin menolak laporan ini?<br>
+                        <b>
+                            Judul Laporan : {{ $dataLaporanKegiatan->judul_laporan }}<br>
+                        </b>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalTolakLaporan{{ $dataLaporanKegiatan->id }}">Tolak</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- Modal Tolak Laporan --}}
+        <form action="{{ route('manajemen.decline.laporan_kegiatan', ['LaporanKegiatan' => $dataLaporanKegiatan]) }}" method="POST" class="form-card">
+            @csrf
+            <div class="modal fade" id="modalTolakLaporan{{ $dataLaporanKegiatan->id }}" tabindex="-1" aria-labelledby="modalTolakLaporanLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content container-fluid p-0 container-md">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalTolakLaporanLabel">Tolak Laporan</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row justify-content-between text-left mb-2">
+                                <div class="col-sm-12 flex-column d-flex ">
+                                    <strong class="text-start"><label for="alasan" class="form-label">Alasan<span class="text-danger">*</span></label></strong>
+                                    <textarea id="alasan" name="alasan" maxlength="100" class="form-control @error('alasan', $dataLaporanKegiatan->id) is-invalid @enderror" @required(true)>@if($errors->hasBag('tolak_laporan')){{ old('alasan') }}@endif</textarea>
+                                    @error('alasan', $dataLaporanKegiatan->id)
+                                        <div class="text-danger"><small>{{ $errors->{$dataLaporanKegiatan->id}->first('alasan') }}</small></div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Kirim</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>        
+    @endforeach
 </body>
 </html>

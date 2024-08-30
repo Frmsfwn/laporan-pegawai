@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ config('app.name') }} | Admin | Homepage</title>
+    <title>{{ config('app.name') }} | {{ Auth::user()->role }} | Homepage</title>
 
     {{-- Bootstrap --}}
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -36,11 +36,11 @@
     <div class="container-fluid pt-4 px-4">
         <div class="row g-4">
             <div class="col-11 col-sm-7 col-md-8 col-lg-9 col-xl-10 colxxl-11 mx-auto p-2">
-                <div class="bg-light card text-center rounded p-3">
+                <div class="shadow-lg bg-light card text-center rounded p-3">
                     <div class="row align-items-center justify-content-between mb-4">
                         <div class="row">
                             <div class="col text-center">
-                                <h3 class="mb-0">Data Tahun Kegiatan</h3>
+                                <h3 class="mb-0">Data Kegiatan</h3>
                             </div>
                             <div class="d-flex">
                                 

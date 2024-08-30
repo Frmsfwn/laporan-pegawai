@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'preventBackHistory'], function(){
     Route::group(['middleware' => 'guest'], function(){
 
-        // Login Function for Guest
+        // Login Function for Guest User
         Route::get('/login', [LoginController::class, 'show'])->name('login');
         Route::post('/login', [LoginController::class, 'login']);
         Route::get('/', function() {
@@ -18,10 +18,10 @@ Route::group(['middleware' => 'preventBackHistory'], function(){
     });
     Route::group(['middleware' => 'auth'], function(){
 
-        // Logout Function for Authenticated
+        // Logout Function for Authenticated User
         Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-        // Change Password
+        // Change Password Function
         Route::get('/password/edit', [LoginController::class, 'editPassword'])->name('edit.password');
         Route::put('{User}/password/update', [LoginController::class, 'updatePassword'])->name('update.password');
 
@@ -63,8 +63,8 @@ Route::group(['middleware' => 'preventBackHistory'], function(){
             
             route::get('/data/tahun/{tahun}/tim/{nama}/laporan', [TimKegiatanController::class, 'showDataLaporan'])->name('show.data_laporan');
             route::get('/data/tahun/{tahun}/tim/{nama}/laporan/search', [TimKegiatanController::class, 'showDataLaporan'])->name('search.data_laporan');
-            route::post('/data/laporan_kegiatan/{LaporanKegiatan}/accept', [TimKegiatanController::class, 'acceptLaporan'])->name('accept.laporan_kegiatan');
-            route::post('/data/laporan_kegiatan/{LaporanKegiatan}/decline', [TimKegiatanController::class, 'declineLaporan'])->name('decline.laporan_kegiatan');
+            route::get('/data/laporan/{LaporanKegiatan}/accept', [TimKegiatanController::class, 'acceptLaporan'])->name('accept.laporan_kegiatan');
+            route::post('/data/laporan/{LaporanKegiatan}/decline', [TimKegiatanController::class, 'declineLaporan'])->name('decline.laporan_kegiatan');
             
         });    
         Route::prefix('ketua')->name('ketua.')->middleware(['userAccess:Ketua'])->group(function() {
