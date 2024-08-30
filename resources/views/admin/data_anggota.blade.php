@@ -81,10 +81,12 @@
                                     </div>
                                     <div class="col-sm-12 flex-column d-flex">
                                         <strong class="text-start"><label for="password_anggota" class="form-label">Password<span class="text-danger">*</span></label></strong>
-                                        <input type="password" id="password_anggota" name="password_anggota" minlength="8" maxlength="25" class="form-control @error('password_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
-                                        <span id="togglePassword" class="toggle-password-icon position-absolute end-0 top-50 translate-middle-y me-3" style="cursor: pointer;">
-                                            <i class="fa-regular fa-eye fa-lg" id="reveal-password"></i>
-                                        </span>
+                                        <div class="position-relative">
+                                            <input type="password" id="password_anggota" name="password_anggota" minlength="8" maxlength="25" class="form-control @error('password_anggota', 'tambah_data') is-invalid @enderror" @required(true)>
+                                            <span id="togglePassword" class="toggle-password-icon position-absolute end-0 top-50 translate-middle-y me-3" style="cursor: pointer;">
+                                                <i class="fa-regular fa-eye fa-lg" id="reveal-password"></i>
+                                            </span>
+                                        </div>
                                         @error('password_anggota', 'tambah_data')
                                             <div class="text-danger"><small>{{ $errors->tambah_data->first('password_anggota') }}</small></div>
                                         @enderror
@@ -190,10 +192,12 @@
                                     </div>
                                     <div class="col-sm-12 flex-column d-flex">
                                         <strong class="text-start"><label for="password_anggota" class="form-label">Password<span class="text-danger">*</span></label></strong>
-                                        <input type="password" id="password_anggota" name="password_anggota" minlength="8" maxlength="25" class="form-control @error('password_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
-                                        <span id="togglePassword" class="toggle-password-icon position-absolute end-0 top-50 translate-middle-y me-3" style="cursor: pointer;">
-                                            <i class="fa-regular fa-eye fa-lg" id="reveal-password"></i>
-                                        </span>                        
+                                        <div class="position-relative">
+                                            <input type="password" id="password_anggota" name="password_anggota" minlength="8" maxlength="25" class="form-control @error('password_anggota', $dataAnggota->id) is-invalid @enderror" @required(true)>
+                                            <span id="togglePassword" class="toggle-password-icon position-absolute end-0 top-50 translate-middle-y me-3" style="cursor: pointer;">
+                                                <i class="fa-regular fa-eye fa-lg" id="reveal-password"></i>
+                                            </span>
+                                        </div>
                                         @error('password_anggota', $dataAnggota->id)
                                             <div class="text-danger"><small>{{ $errors->{$dataAnggota->id}->first('password_anggota') }}</small></div>
                                         @enderror
