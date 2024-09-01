@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ config('app.name') }} | Ketua | Homepage</title>
+    <title>{{ config('app.name') }} | {{ Auth::user()->role }} | Data Anggota</title>
 
     {{-- Bootstrap --}}
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+    {{-- Custom CSS --}}
+    <style>
+        @media (max-width: 430px) {
+            .w-s-100 {
+                width: 100% !important;
+            }
+        } 
+    </style>
 
     {{-- JQuery --}}
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
@@ -21,9 +30,8 @@
     <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">
                 <ul class="navbar-nav me-auto breadcrumb align-items-center my-2" style="--bs-breadcrumb-divider: '>';">
-                    <li class="nav-item">
-                        <a class="breadcrumb-item text-black text-decoration-none" href="{{ route('ketua.homepage') }}">Homepage</a>
-                    </li>
+                    <a class="breadcrumb-item text-black text-decoration-none" href="{{ route('ketua.homepage') }}">Homepage</a>
+                    <a class="breadcrumb-item active" aria-current="page" href="{{ route('ketua.show.data_anggota', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}">Data Anggota</a>
                 </ul>
                 <div class="dropdown me-3">
                     <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -59,55 +67,47 @@
             </div>
         </div>
     </nav> 
-    {{-- Card Table --}}    
-    <div class="container-fluid pt-4 px-4">
-        <div class="row g-4">
-            <div class="col-11 col-sm-7 col-md-8 col-lg-9 col-xl-10 colxxl-11 mx-auto p-2">
-                <div class="shadow-lg bg-light card text-center rounded p-3">
-                    <div class="row align-items-center justify-content-between mb-4">
-                        <div class="row">
-                            <div class="col text-center">
-                                <h3 class="mb-0">Tim Kegiatan</h3>
-                            </div>
-                            <div class="d-flex">
-                                
-                            </div>    
-                            {{-- <form class="d-flex col-7 col-md-4 col-xxl-2 mt-2" role="search" action="{{ route('manajemen.search.data_tim', ['tahun' => $data_tahun_kegiatan]) }}" method="GET">
-                                <input class="form-control w-100" name="keyword" id="search" type="search" value="{{ $keyword }}" placeholder="Search" aria-label="Search">
-                                <button class="btn btn-outline-success" type="submit">Search</button>
-                            </form> --}}
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nama Tim</th>
-                                    <th scope="col" colspan="2">Opsi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($data_tim_kegiatan as $dataTimKegiatan)
-                                    <tr class="align-middle">
-                                        <td>{{ $dataTimKegiatan->nama }}</td>
-                                        <td>
-                                            <a href="{{ route('ketua.show.data_anggota', ['tahun' => $dataTimKegiatan->tahun_kegiatan->tahun, 'nama' => $dataTimKegiatan->nama]) }}" class="btn btn-primary">Anggota</a>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('ketua.show.data_laporan', ['tahun' => $dataTimKegiatan->tahun_kegiatan->tahun, 'nama' => $dataTimKegiatan->nama]) }}" class="btn btn-primary">Laporan</a>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td><a>Data Kosong!</a></td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+    <main class="container-fluid ps-3 my-4">
+        <section class="row g-2 justify-content-between">
+            <form class="col-12 col-sm-auto" action="{{ route('ketua.search.data_anggota', ['tahun' => request('tahun'), 'nama' => request('nama')]) }}" method="GET">
+                <div class="input-group mb-3">
+                    <button type="submit" class="input-group-text shadow-sm" for="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <input type="text" class="form-control shadow-sm" name="keyword" id="search" type="search" value="{{ $keyword }}" placeholder="Search" aria-label="Search">
+                </div>
+            </form>
+        </section>
+        <h2 class="m-auto text-black text-center mt-2 mb-4">{{ $data_tim_kegiatan->nama }}/Anggota</h2>
+        <section class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-6 g-3 mb-3">
+            @forelse($data_anggota_tim as $dataAnggota)
+            {{-- Card --}}
+            <div class="col">
+                <div class="card">
+                    <div class="overflow-hidden rounded">
+                        <ul class="list-group list-group-flush">                
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Username</h4>
+                                <h5 class="card-text fw-normal">{{ $dataAnggota->username }}</h5>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> NIP</h4>
+                                <h5 class="card-text fw-normal">{{ $dataAnggota->nip }}</h5>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Nama</h4>
+                                <h5 class="card-text fw-normal">{{ $dataAnggota->nama }}</h5>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="card-title link-underline-dark link-offset-3 text-decoration-underline fw-bold"> Role</h4>
+                                <h5 class="card-text fw-normal">{{ $dataAnggota->role }}</h5>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+            @empty
+                <h3 class="m-auto text-secondary opacity-75 text-center mt-3">Data Kosong</h3>
+            @endforelse
+        </section>
+    </main>
 </body>
 </html>

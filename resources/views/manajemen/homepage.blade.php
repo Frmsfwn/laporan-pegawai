@@ -18,7 +18,7 @@
 </head>
 <body class="bg-body-secondary">
     {{-- Navbar --}}
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-white shadow">
         <div class="container-fluid">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
@@ -49,10 +49,6 @@
                             <div class="d-flex">
                                 
                             </div>    
-                            <form class="d-flex col-7 col-md-4 col-xxl-2 mt-2" role="search" action="{{ route('manajemen.search.data_tahun') }}" method="GET">
-                                <input class="form-control w-100" name="keyword" id="search" type="search" value="{{ $keyword }}" placeholder="Search" aria-label="Search">
-                                <button class="btn btn-outline-success" type="submit">Search</button>
-                            </form>
                         </div>
                     </div>
                     <div class="table-responsive">

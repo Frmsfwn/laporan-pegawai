@@ -23,20 +23,19 @@ class TimKegiatanController extends Controller
         if(Auth::user()->role === 'Admin') {
 
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->get();
+            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->orderBy('updated_at','desc')->get();
 
             $keyword = $request->input('keyword');
             if ($keyword) {
-                $data_tim_kegiatan = collect($data_tim_kegiatan)->filter(function ($item) use ($keyword) {
-                    return false !== stristr($item->nama, $keyword);
-                });
-                $data_tim_kegiatan
-                    ->sortByDesc('updated_at');
 
-                return view('admin.data_tim')
-                    ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
-                    ->with('data_tim_kegiatan',$data_tim_kegiatan)
-                    ->with('keyword',$keyword);    
+                $data_tim_kegiatan = 
+                TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)
+                    ->whereAny([
+                        'nama',
+                    ], 'like', "%$keyword%")
+                    ->orderBy('updated_at','desc')
+                    ->get();
+
             }    
 
             return view('admin.data_tim')
@@ -47,21 +46,20 @@ class TimKegiatanController extends Controller
         }elseif(Auth::user()->role === 'Manajemen') {
 
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
-            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->get();
+            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->orderBy('updated_at','desc')->get();
 
             $keyword = $request->input('keyword');
             if ($keyword) {
-                $data_tim_kegiatan = collect($data_tim_kegiatan)->filter(function ($item) use ($keyword) {
-                    return false !== stristr($item->nama, $keyword);
-                });
-                $data_tim_kegiatan
-                    ->sortByDesc('updated_at');
 
-                return view('manajemen.data_tim')
-                    ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
-                    ->with('data_tim_kegiatan',$data_tim_kegiatan)
-                    ->with('keyword',$keyword);    
-            }    
+                $data_tim_kegiatan = 
+                TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)
+                    ->whereAny([
+                        'nama',
+                    ], 'like', "%$keyword%")
+                    ->orderBy('updated_at','desc')
+                    ->get();
+
+            }     
 
             return view('manajemen.data_tim')
                 ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
@@ -176,40 +174,92 @@ class TimKegiatanController extends Controller
 
             $keyword = $request->input('keyword');
             if ($keyword) {
+
                 $data_anggota_tim =
-                    AnggotaTim::where('id_tim_kegiatan',$data_tim_kegiatan->id)
-                        ->whereHas('user', function (Builder $query) use ($keyword) {
-                            $query->whereAny([
-                                    'nip',
-                                    'nama',
-                                    'username',
-                                    'role',
-                                ],'like', "%$keyword%");
-                        })
+                    User::whereRelation('anggota_tim', 'id_tim_kegiatan', '=', $data_tim_kegiatan->id)
+                        ->whereAny([
+                                'nip',
+                                'nama',
+                                'username',
+                                'role',
+                            ],'like', "%$keyword%")
                         ->orderBy('updated_at','desc')
-                        ->orderBy('created_at','desc')
                         ->get();
+
             }    
 
             return view('admin.data_anggota', ['tahun' => request('tahun'), 'nama' => request('nama')])
-                ->with('keyword',$keyword)
                 ->with('data_tim_kegiatan',$data_tim_kegiatan)
                 ->with('data_anggota_tim',$data_anggota_tim)
-                ->with('data_ketua_tim',$data_ketua_tim);
+                ->with('data_ketua_tim',$data_ketua_tim)
+                ->with('keyword',$keyword);
         
         }elseif(Auth::user()->role === 'Ketua') {
             
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
             $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
-            return view('ketua.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
-                ->with('data_tim_kegiatan',$data_tim_kegiatan);
+                TimKegiatan::whereHas('tahun_kegiatan', function (Builder $query) use ($data_tahun_kegiatan) {
+                    $query->where('tahun', '=', $data_tahun_kegiatan->tahun);
+                })->get();
+            $data_anggota_tim = 
+                User::whereHas('anggota_tim', function (Builder $query) use ($data_tim_kegiatan) {
+                    $query->whereRelation('tim_kegiatan', 'id', '=', $data_tim_kegiatan->id);
+                })->get();
+
+            $keyword = $request->input('keyword');
+            if ($keyword) {
+
+                $data_anggota_tim =
+                    User::whereRelation('anggota_tim', 'id_tim_kegiatan', '=', $data_tim_kegiatan->id)
+                        ->whereAny([
+                                'nip',
+                                'nama',
+                                'username',
+                                'role',
+                            ],'like', "%$keyword%")
+                        ->orderBy('updated_at','desc')
+                        ->get();
+
+            }   
+
+            return view('ketua.data_anggota', ['tahun' => request('tahun'), 'nama' => request('nama')])
+                ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('data_anggota_tim',$data_anggota_tim)
+                ->with('keyword',$keyword);
 
         }elseif(Auth::user()->role === 'Anggota') {
             
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
             $data_tim_kegiatan = $data_tahun_kegiatan->tim_kegiatan->where('nama',request('nama'))->first();
-            return view('anggota.detail_tim_kegiatan', ['tahun' => request('tahun'), 'nama' => request('nama')])
-                ->with('data_tim_kegiatan',$data_tim_kegiatan);
+                TimKegiatan::whereHas('tahun_kegiatan', function (Builder $query) use ($data_tahun_kegiatan) {
+                    $query->where('tahun', '=', $data_tahun_kegiatan->tahun);
+                })->get();
+            $data_anggota_tim = 
+                User::whereHas('anggota_tim', function (Builder $query) use ($data_tim_kegiatan) {
+                    $query->whereRelation('tim_kegiatan', 'id', '=', $data_tim_kegiatan->id);
+                })->get();
+
+            $keyword = $request->input('keyword');
+            if ($keyword) {
+                $data_anggota_tim =
+                    User::whereRelation('anggota_tim', 'id_tim_kegiatan', '=', $data_tim_kegiatan->id)
+                        ->whereAny([
+                                'nip',
+                                'nama',
+                                'username',
+                                'role',
+                            ],'like', "%$keyword%")
+                        ->orderBy('updated_at','desc')
+                        ->get();
+
+            }   
+
+            return view('anggota.data_anggota', ['tahun' => request('tahun'), 'nama' => request('nama')])
+                ->with('data_tahun_kegiatan',$data_tahun_kegiatan)
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('data_anggota_tim',$data_anggota_tim)
+                ->with('keyword',$keyword);
 
         }    
     }
@@ -315,13 +365,13 @@ class TimKegiatanController extends Controller
             'nama_anggota' => 'required|max:25',
             'username_anggota' => ['required','max:25',Rule::unique('users','username')->ignore($AnggotaTim->id)],
             'password_anggota' => [
+                'required',
                 Password::min(8)
                     ->max(25)
                     ->letters()
                     ->mixedCase()
                     ->numbers()
                     ->symbols()
-                    ->required()
             ],
             'role_anggota' => 'required|in:Anggota,Ketua',
         ],$messages)->validateWithBag($AnggotaTim->id);
@@ -369,7 +419,20 @@ class TimKegiatanController extends Controller
             $keyword = $request->input('keyword');
             $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
             $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->where('nama',request('nama'))->first();
-            $data_laporan_kegiatan = LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)->get();
+            $data_laporan_kegiatan = LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)->orderBy('updated_at','desc')->get();
+
+            if ($keyword) {
+
+                $data_laporan_kegiatan = 
+                    LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)
+                        ->whereAny([
+                            'judul_laporan',
+                            'informasi_kegiatan',
+                            'status_laporan',
+                        ], 'like', "%$keyword%")
+                        ->orderBy('updated_at','desc')
+                        ->get();
+            }
 
             return view('admin.data_laporan')
                 ->with('keyword',$keyword)
@@ -383,11 +446,74 @@ class TimKegiatanController extends Controller
             $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->where('nama',request('nama'))->first();
             $data_laporan_kegiatan = LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)->get();
     
+            if ($keyword) {
+
+                $data_laporan_kegiatan = 
+                    LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)
+                        ->whereAny([
+                            'judul_laporan',
+                            'informasi_kegiatan',
+                            'status_laporan',
+                        ], 'like', "%$keyword%")
+                        ->orderBy('updated_at','desc')
+                        ->get();
+            }
+
             return view('manajemen.data_laporan')
                 ->with('keyword',$keyword)
                 ->with('data_tim_kegiatan',$data_tim_kegiatan)
                 ->with('data_laporan_kegiatan',$data_laporan_kegiatan);
+
+        }elseif(Auth::user()->role === 'Ketua') {
+
+            $keyword = $request->input('keyword');
+            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->where('nama',request('nama'))->first();
+            $data_laporan_kegiatan = LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)->get();
     
+            if ($keyword) {
+
+                $data_laporan_kegiatan = 
+                    LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)
+                        ->whereAny([
+                            'judul_laporan',
+                            'informasi_kegiatan',
+                            'status_laporan',
+                        ], 'like', "%$keyword%")
+                        ->orderBy('updated_at','desc')
+                        ->get();
+            }
+
+            return view('ketua.data_laporan')
+                ->with('keyword',$keyword)
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('data_laporan_kegiatan',$data_laporan_kegiatan);
+
+        }elseif(Auth::user()->role === 'Anggota') {
+
+            $keyword = $request->input('keyword');
+            $data_tahun_kegiatan = TahunKegiatan::where('tahun',request('tahun'))->first();
+            $data_tim_kegiatan = TimKegiatan::where('id_tahun_kegiatan',$data_tahun_kegiatan->id)->where('nama',request('nama'))->first();
+            $data_laporan_kegiatan = LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)->get();
+    
+            if ($keyword) {
+
+                $data_laporan_kegiatan = 
+                    LaporanKegiatan::where('id_tim_kegiatan',$data_tim_kegiatan->id)
+                        ->whereAny([
+                            'judul_laporan',
+                            'informasi_kegiatan',
+                            'status_laporan',
+                        ], 'like', "%$keyword%")
+                        ->orderBy('updated_at','desc')
+                        ->get();
+            }
+            
+            return view('anggota.data_laporan')
+                ->with('keyword',$keyword)
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('data_laporan_kegiatan',$data_laporan_kegiatan);
+
         }
     }
 
@@ -495,9 +621,9 @@ class TimKegiatanController extends Controller
         ->success('<b>Berhasil!</b><br>Data laporan kegiatan berhasil diubah.');
 
         if(Auth::user()->role === 'Ketua') {
-            return redirect(route('ketua.show.detail_tim_kegiatan', ['tahun' => $LaporanKegiatan->tahun_kegiatan->tahun, 'nama' => $LaporanKegiatan->tim_kegiatan->nama]));
+            return redirect(route('ketua.show.data_laporan', ['tahun' => $LaporanKegiatan->tahun_kegiatan->tahun, 'nama' => $LaporanKegiatan->tim_kegiatan->nama]));
         }elseif(Auth::user()->role === 'Anggota') {
-            return redirect(route('anggota.show.detail_tim_kegiatan', ['tahun' => $LaporanKegiatan->tahun_kegiatan->tahun, 'nama' => $LaporanKegiatan->tim_kegiatan->nama]));
+            return redirect(route('anggota.show.data_laporan', ['tahun' => $LaporanKegiatan->tahun_kegiatan->tahun, 'nama' => $LaporanKegiatan->tim_kegiatan->nama]));
         }
     }
 

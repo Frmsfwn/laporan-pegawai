@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\LaporanKegiatan;
 use App\Models\TahunKegiatan;
+use App\Models\TimKegiatan;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -201,15 +203,27 @@ class LoginController extends Controller
 
         }elseif(Auth::user()->role === 'Ketua') {
 
-            $data_tim_kegiatan = Auth::user()->anggota_tim->tim_kegiatan;
+            $data_tim_kegiatan = 
+            TimKegiatan::whereHas('anggota_tim', function (Builder $query) {
+                $query->where('id_anggota', '=', Auth::id());
+            })->get();
+
+            $keyword = $request->input('keyword');
             return view('ketua.homepage')
-                ->with('data_tim_kegiatan',$data_tim_kegiatan);
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('keyword',$keyword);
 
         }elseif(Auth::user()->role === 'Anggota') {
             
-            $data_tim_kegiatan = Auth::user()->anggota_tim->tim_kegiatan;
+            $data_tim_kegiatan = 
+            TimKegiatan::whereHas('anggota_tim', function (Builder $query) {
+                $query->where('id_anggota', '=', Auth::id());
+            })->get();
+
+            $keyword = $request->input('keyword');
             return view('anggota.homepage')
-                ->with('data_tim_kegiatan',$data_tim_kegiatan);
+                ->with('data_tim_kegiatan',$data_tim_kegiatan)
+                ->with('keyword',$keyword);
 
         }
     }

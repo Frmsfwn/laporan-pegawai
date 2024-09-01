@@ -33,15 +33,6 @@
             --white: #fff;
         }
 
-        .bg-log {
-            background-color: var(--white);
-        }
-
-        .icon {
-            position: absolute;
-            right: 30px;
-        }
-
         .button {
             background-color: var(--primary);
         }
@@ -57,31 +48,25 @@
     </style>
     
 </head>
-<body>
+<body class="bg-body-secondary">
     {{-- Navbar --}}
-    <nav class="navbar navbar-expand-lg bg-white shadow">
+    <nav class="navbar navbar-expand-lg bg-white shadow" aria-label="breadcrumb">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('admin.homepage') }}">Homepage <i class="fa-solid fa-chevron-right fs-6"></i></a>
-                <ul class="navbar-nav me-auto flex-row">
-                    <li class="nav-item me-2">
-                        <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('edit.password') }}">Ubah Password</a>
-                    </li>
+            <ul class="breadcrumb align-items-center my-2" style="--bs-breadcrumb-divider: '>';">
+                <a class="breadcrumb-item text-black text-decoration-none" href="{{ route('admin.homepage') }}">Homepage</a>
+                <a class="breadcrumb-item active" aria-current="page" href="{{ route('edit.password') }}">Ubah Password</a>
+            </ul>
+            <div class="nav-item dropdown nav-link">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}/<b>{{ Auth::user()->username }}</b></a>
+                <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
+                    <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
                 </ul>
-                <li class="nav-item dropdown nav-link">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}/<b>{{ Auth::user()->username }}</b></a>
-                    <ul class="dropdown-menu dropdown-menu-end bg-light border-1 rounded-2 m-0">
-                        <li><a class="dropdown-item" href="{{ route('edit.password') }}"><i class="fa-solid fa-key"></i> Ubah Password</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-                    </ul>
-                </li>
             </div>
         </div>
     </nav>
     {{-- Card Table --}}    
-
-    <div class="d-flex align-items-center justify-content-center px-2 pb-2 mt-2">
-        <form action="{{ route('update.password', ['User' => Auth::user()]) }}" method="POST" style="width: 460px;" class="shadow-lg  mt-4 px-4 pt-4 card bg-white" style="border-radius: 1rem;">
+    <div class="d-flex align-items-center justify-content-center px-2 pb-2 mt-5">
+        <form action="{{ route('update.password', ['User' => Auth::user()]) }}" method="POST" style="width: 460px;" class="shadow-lg mt-5 px-4 pt-4 card bg-white" style="border-radius: 1rem;">
         @csrf
         @method('PUT')
             <h3 class="fw-semibold fs-3 pb-2 text-black align-self-center text-center">Ubah Password</h3>

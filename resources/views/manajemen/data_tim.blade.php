@@ -18,11 +18,11 @@
 </head>
 <body class="bg-body-secondary">
     {{-- Navbar --}}
-    <nav class="navbar navbar-expand-lg bg-white shadow">
+    <nav class="navbar navbar-expand-lg bg-white shadow" aria-label="breadcrumb">
         <div class="container-fluid">
             <ul class="breadcrumb align-items-center my-2" style="--bs-breadcrumb-divider: '>';">
-                <a class="navbar-brand" href="{{ route('manajemen.homepage') }}">Homepage</a>
-                <a class="nav-link active pt-2 pb-1" aria-current="page" href="{{ route('manajemen.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim</a>
+                <a class="breadcrumb-item text-black text-decoration-none" href="{{ route('manajemen.homepage') }}">Homepage</a>
+                <a class="breadcrumb-item active" aria-current="page" href="{{ route('manajemen.show.data_tim', ['tahun' => request('tahun')]) }}">Data Tim</a>
             </ul>
             <div class="nav-item dropdown nav-link">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{ Auth::user()->role }}/<b>{{ Auth::user()->username }}</b></a>
@@ -32,11 +32,18 @@
                     <li><a class="dropdown-item" href="{{ route('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
                 </ul>
             </div>
-            </div>
         </div>
     </nav>
     {{-- Card Table --}}    
     <div class="container-fluid pt-4 px-4">
+        <section class="row g-2 justify-content-between">
+            <form class="col-12 col-sm-auto" action="{{ route('manajemen.search.data_tim', ['tahun' => request('tahun')]) }}" method="GET">
+                <div class="input-group mb-3">
+                    <button type="submit" class="input-group-text shadow-sm" for="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <input type="search" class="form-control shadow-sm" name="keyword" id="search" type="search" value="{{ $keyword }}" placeholder="Search" aria-label="Search">
+                </div>
+            </form>
+        </section>
         <div class="row g-4">
             <div class="col-11 col-sm-7 col-md-8 col-lg-9 col-xl-10 colxxl-11 mx-auto p-2">
                 <div class="shadow-lg bg-light card text-center rounded p-3">
@@ -48,10 +55,6 @@
                             <div class="d-flex">
                                 
                             </div>    
-                            <form class="d-flex col-7 col-md-4 col-xxl-2 mt-2" role="search" action="{{ route('manajemen.search.data_tim', ['tahun' => request('tahun')]) }}" method="GET">
-                                <input class="form-control w-100" name="keyword" id="search" type="search" value="{{ $keyword }}" placeholder="Search" aria-label="Search">
-                                <button class="btn btn-outline-success" type="submit">Search</button>
-                            </form>
                         </div>
                     </div>
                     <div class="table-responsive">
